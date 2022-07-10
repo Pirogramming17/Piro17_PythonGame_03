@@ -250,15 +250,14 @@ class Game:
                 name = self.player[list[a]].name
               print(now, ":", name, "좋아!")
               if name == user:
-                try: 
+                while True:
                   res = input("'캌 퉤'와 '나도 좋아' 둘 중에 입력해주세요. ")
                   if res == "캌 퉤":
                     react = 0
+                    break
                   elif res == "나도 좋아":
                     react = 1
-                except ValueError:
-                  print("잘못 입력하셨습니다. 다시 입력해주세요.")
-                  continue
+                    break
             cnt += 1
 
             if name != user:
