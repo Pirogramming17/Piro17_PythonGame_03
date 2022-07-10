@@ -34,7 +34,7 @@ class Game:
         print("~" * 70)
         while True:
           try:
-            self.drink_limit = int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5을 선택해주세요) : "))*2
+            self.drink_limit = int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5을 선택해주세요) : "))
             if self.drink_limit < 1 or self.drink_limit > 5:
               raise ValueError
             break
