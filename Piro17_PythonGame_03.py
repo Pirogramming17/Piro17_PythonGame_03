@@ -246,55 +246,48 @@ class Game:
       '''술게임 4'''
       # TODO 6
       reaction = ["캌 퉤", "나도 좋아"]
-      name = input("술도 마셨는데 좋아게임할까? ")
+      now = self.player[len(self.player) - 1].name
+      name = input("술도 마셨는데 좋아게임할까? ")[0:2]
+      cnt = 0
       while True:
         try:
           flag = False
           for i in range(len(self.player)):
-            if name[0:2] in self.player[i].name:
+            if name in self.player[i].name:
               flag = True
           if flag == False:
             raise ValueError
         except ValueError:
           print("잘못 입력하셨습니다. 다시 입력해주세요.")
         else:
+          list = []
+          if cnt != 0:
+            for i in range(len(self.player)):
+              if self.player[i].name != now:
+                list.append(i)
+            a = random.randint(0, len(list) - 1)
+            name = self.player[list[a]].name
+            print(name, "좋아!")
+          cnt += 1
+
           react = random.randint(0, 1)
           print(reaction[react])
 
           if react == 0: # 칵 퉤
-            while True:
-              for i in range(len(self.player)):
-                if name[0:2] == self.player[i].name:
-                  self.player[i].rejection += 1
-                  if self.player[i].rejection == 3:
-                    self.player[i].drink_amount += 1
-
-              list = []
-              for i in range(len(self.player)):
-                if name[0:2] != self.player[i].name:
-                  list.append(i)
-              a = random.randint(0, len(list) - 1)
-              if a != len(list) - 1:
-                print(self.player[list[a]].name, "좋아!")
-
-              react = random.randint(0, 1)
-              if react == 1:
-                break    
-          else: # 나도 좋아
-              list = []
-              for i in range(len(self.player)):
-                if name[0:2] != self.player[i].name:
-                  list.append(i)
-              a = random.randint(0, len(list) - 1)
-              if a != len(list) - 1:
-                print(self.player[list[a]].name, "좋아!")
-              else:
-                input()
+            for i in range(len(self.player)):
+              if now == self.player[i].name:
+                self.player[i].rejection += 1
+                if self.player[i].rejection == 3:
+                  self.player[i].drink_amount += 1
+                  self.decideTurn()
+                  exit()
+          elif react == 1: # 나도 좋아
+              now = name
+                
                 
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
-
 
 game = Game()
 game.game()
