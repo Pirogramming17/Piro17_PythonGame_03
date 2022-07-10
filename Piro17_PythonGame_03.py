@@ -36,6 +36,7 @@ class Game:
       wave = 69 # 물결수-> 나중에 제거
       dead = False # 누군가 사망유뮤
       dead_player = '' # 사망한 플레이어이름
+      count = 0 # 첫 시작
 
       # (1) 현재 마신 잔 수, 치사량까지 남은 잔 수 계산 및 출력
       print('~'*wave)
@@ -66,11 +67,12 @@ class Game:
       print('~'*wave)
       # (3) 게임 선택 - 현재 차례가 사용자이면 입력을 받고, 컴퓨터면 랜덤 선택
       if turn_player == len(self.player): # turn_player 가 사용자일 때
-        start_key : input('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"를, 계속하고 싶으면 아무키나 입력해 주세요! :')
-        if start_key == 'exit':
-          print('술게임을 종료합니다. 안녕~')
-          print('~'*wave)
-          exit() 
+        if count != 0: # 첫 시작이 아닐 때
+          start_key = input('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"를, 계속하고 싶으면 아무키나 입력해 주세요! :')
+          if start_key == 'exit':
+            print('술게임을 종료합니다. 안녕~')
+            print('~'*wave)
+            exit() 
         else:
           while True:
             try:
@@ -85,6 +87,8 @@ class Game:
       else: # turn_player 가 컴퓨터일 때
         selected_game = random.randint(1,5)
         print(f'{self.player[turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : {selected_game}')
+
+      count += 1 # 진행된 게임 횟수 증가
 
       print('~'*wave)
       # (4) 선택된 게임 함수 호출
@@ -106,7 +110,7 @@ class Game:
       #술게임 시작 전 필요한 것들을 세팅
       self.set_game()
       #술게임 진행
-      self.play_game()#->set_game안에서 실행되어야 할듯 사용자부터
+      self.play_game()
 
 
     #매 술게임이 끝날 때마다 벌칙자(술마시는 사람)이 결정되고, 그 사람의 마신 잔 수를 ++해줘야 함.
@@ -147,9 +151,9 @@ class Game:
         if len(player_list[next_player])!= 0:
           next_player = selected_player[next_player].pop(random.randint(0,1))
         else: # 손을 다 내린상태에서 맞았을 때 
-          self.player[i].drink_amount += 1
-          self.player[i].drink_limit -= 1
-          self.play_game(i)
+          self.player[next_player].drink_amount += 1
+          self.player[next_player].drink_limit -= 1
+          self.play_game(next_player)
 
 
 
