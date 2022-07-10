@@ -148,7 +148,5 @@ class Game:
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
-
 game = Game()
 game.game()
-game.game_4()
