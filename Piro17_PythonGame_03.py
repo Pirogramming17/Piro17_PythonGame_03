@@ -1,4 +1,5 @@
 import random
+from turtle import Turtle
 import requests
 
 class Player:
@@ -192,56 +193,82 @@ class Game:
     def game_4(self):
       '''술게임 4'''
       # TODO 6
-      reaction = ["캌 퉤", "나도 좋아"]
-      name = input("술도 마셨는데 좋아게임할까? ")
-      while True:
-        try:
-          flag = False
-          for i in range(len(self.player)):
-            if name[0:2] in self.player[i].name:
-              flag = True
-          if flag == False:
-            raise ValueError
-        except ValueError:
-          print("잘못 입력하셨습니다. 다시 입력해주세요.")
-        else:
-          react = random.randint(0, 1)
-          print(reaction[react])
-
-          if react == 0: # 칵 퉤
-            while True:
-              for i in range(len(self.player)):
-                if name[0:2] == self.player[i].name:
-                  self.player[i].rejection += 1
-                  if self.player[i].rejection == 3:
-                    self.player[i].drink_amount += 1
-
-              list = []
-              for i in range(len(self.player)):
-                if name[0:2] != self.player[i].name:
-                  list.append(i)
-              a = random.randint(0, len(list) - 1)
-              if a != len(list) - 1:
-                print(self.player[list[a]].name, "좋아!")
-
-              react = random.randint(0, 1)
-              if react == 1:
-                break    
-          else: # 나도 좋아
-              list = []
-              for i in range(len(self.player)):
-                if name[0:2] != self.player[i].name:
-                  list.append(i)
-              a = random.randint(0, len(list) - 1)
-              if a != len(list) - 1:
-                print(self.player[list[a]].name, "좋아!")
-              else:
-                input()
                 
                 
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
+      
+      turn = self.turn_player #게임을 고른 사람부터 시작
+      characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
+      choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
+      ans_list = [] #이미 나온 답을 저장하는 리스트
+      wrong_flag = False #틀렸는지 알려주는 플래그
+
+      word_list = []
+      url = f"https://wordrow.kr/초성/{choseong}" 
+      response = requests.get(url)
+
+      from bs4 import BeautifulSoup as bs
+      soup = bs(response.text, "html.parser")
+
+      raw_words = soup.select(".sub-heading + .larger > ul > li")
+      
+      for raw_word in raw_words:
+        word_list.append(raw_word.select_one("b").text)
+      
+      print(word_list)
+      
+      print('%s 부터 시작! 😜' %self.player[turn].name)
+      print('다음 초성에 해당하는 단어를 말해주세요! %s' %choseong)
+      
+      while True :
+        if turn == len(self.player)-1 : #현재 차례가 사용자라면
+          ans = input('%s : ' %(self.player[turn].name))
+          if ans in word_list and ans not in ans_list : #맞는 답을 말했다면
+            print('⭕🙆‍♂️ 통과!!! 🙆‍♂️⭕')
+            ans_list.append(ans)
+            turn = 0
+          elif ans in ans_list : #이미 나왔던 답이라면
+            print('❌🙅‍♂️그건 이미 나온 단어인데!!!❌🙅‍♂️ 바보!!!👎👎👎')
+            wrong_flag = True
+            break
+          else : #틀린 답을 말했다면
+            print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
+            wrong_flag = True
+            break
+        else : #현재 차례가 컴퓨터라면
+          pass_or_fail = random.randint(0,3) #0,1,2,3 중 하나를 뽑는다
+          if pass_or_fail == 0 : #0이면 틀리기
+            print('%s : 모...모르겠는데!!! 🙄💦' %(self.player[turn].name))
+            print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
+            wrong_flag = True
+            break
+          else : #0이 아니면 정답 말하기
+            ans = random.choice(word_list)
+            print('%s : %s' %(self.player[turn].name, ans))
+            if ans in ans_list : #이미 나왔던 답이라면
+              print('❌🙅‍♂️그건 이미 나온 단어인데!!!❌🙅‍♂️ 바보!!!👎👎👎')
+              wrong_flag = True
+              break
+            else :
+              print('⭕🙆‍♂️ 통과!!! 🙆‍♂️⭕')
+              ans_list.append(ans)
+              turn += 1
+            
+            
+      if wrong_flag == True :
+        print('아 누가누가 술을 마셔😲 %s이(가) 술을 마셔🤪 원~~~샷❗🧨' %self.player[turn].name)
+        self.player[turn].drink_amount += 1
+        self.decideTurn()
+      
+        
+      
+
+      
+        
+      
+      
 
 
 game = Game()
