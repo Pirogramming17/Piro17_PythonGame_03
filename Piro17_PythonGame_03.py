@@ -377,6 +377,79 @@ class Game:
     def game_3(self):
       '''술게임 3'''
       # TODO 5
+      print('(ง˙∇˙)ว 삼육구 삼육구 삼육구 삼육구 (ง˙∇˙)ว')
+      your_turn = ''
+      cur_num = 1
+      is_go = True
+
+      #입력값에 3,6,9가 들어있는지 확인 하는 함수
+      def claps(cur_num):
+          cur_num_str = str(cur_num)
+          count_369 = 0
+
+          c = str(cur_num).count('3')+str(cur_num).count('6')+str(cur_num).count('9')
+          if c==0: #3,6,9가 포함되어 있지 않는 경우
+              count_369 = 0
+              return count_369
+          else: # 3,6,9가 포함되어 있는 경우
+              count_369 = 1*c
+              return count_369
+
+      #'짝' 리턴하는 함수
+      def to_clap(count_369, clap_sound = '짝'):
+          return count_369 * clap_sound
+
+      #사용자가 제대로 입력했는지 확인하는 함수
+      def you_right(cur_num, your_turn):
+          count_369 = claps(cur_num)
+          if count_369 != 0 and your_turn in to_clap(count_369): #짝 차례
+              return 1
+          elif count_369 == 0 and your_turn == str(cur_num): #숫자 차례
+              return 2
+          else:
+              return False
+
+      while is_go == True:
+          flag = True
+          num_ran = random.randint(1,7)
+          count_369 = claps(cur_num)
+          for i in range(len(self.player)-1):
+              count_369 = claps(cur_num)
+              if num_ran != 2:
+                  if count_369 == 0:
+                      print(self.player[i].name,f': {cur_num}')
+                  else:
+                      print(self.player[i].name,f': {to_clap(count_369)}')
+                  cur_num += 1
+              else:
+                  if count_369 == 0:
+                    print(self.player[i].name, '짝')
+                  elif count_369 == 1:
+                    print(self.player[i].name,f': {cur_num}')
+                  else:
+                      print(self.player[i].name,'짝')
+                  print(self.player[i].name,'벌칙!')
+                  print('아 누가누가 술을 마셔😲 길동이(가) 술을 마셔🤪 원~~~샷❗🧨')
+                  self.player[i].drink_amount += 1
+                  flag = False
+                  break
+          if flag == False:
+            break
+
+          your_turn = input("네 차례: ")
+          if you_right(cur_num, your_turn) == 1:
+              cur_num += 1
+              continue
+          if you_right(cur_num, your_turn) == 2:
+              cur_num += 1
+              continue
+          else:
+              print(self.user_name, '벌칙!')
+              print('아 누가누가 술을 마셔😲 길동이(가) 술을 마셔🤪 원~~~샷❗🧨')
+              self.player[i].drink_amount += 1
+              is_go = False
+          self.decideTurn()
+
 
     def game_4(self):
       '''술게임 4'''
