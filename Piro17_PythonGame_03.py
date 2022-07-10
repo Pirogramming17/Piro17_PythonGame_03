@@ -64,6 +64,20 @@ class Game:
         print("게임을 진행하지 않습니다.")
         exit()
 
+      # TODO 1
+      # (1) 게임을 진행할까요? (y/n)
+      # (2) 사용자 이름 입력받기
+      # (3) 주량 선택하기
+      # (4) 플레이어들을 self.player에 할당함
+      # self.player.append(Player("name(심은서)", drink_limit(랜덤), drink_amount(0)))
+      # self.player.append(Player("name(조하연)", drink_limit(랜덤), drink_amount(0)))
+      # self.player.append(Player("name(조연서)", drink_limit(랜덤), drink_amount(0)))
+      # self.player.append(Player("name(박예진)", drink_limit(랜덤), drink_amount(0)))
+      # self.player.append(Player("name(이헌도)", drink_limit(랜덤), drink_amount(0)))
+      # self.player.append(Player("name(사용자가 입력한 이름)", drink_limit(사용자가 선택한 주량), drink_amount(0)))
+    
+      # (5) 같이 대결할 사람 초대하기(최대 몇명?)
+      
     def play_game(self):
       '''술게임을 진행하는 함수'''
 
@@ -80,7 +94,10 @@ class Game:
       #술게임 시작 전 필요한 것들을 세팅
       self.set_game()
       #술게임 진행
+
       # self.play_game()
+      self.play_game()
+
 
     #매 술게임이 끝날 때마다 벌칙자(술마시는 사람)이 결정되고, 그 사람의 마신 잔 수를 ++해줘야 함.
 
@@ -149,6 +166,6 @@ class Game:
       '''술게임 5 (크롤링)'''
       # TODO 7
 
+
 game = Game()
 game.game()
-game.game_4()
