@@ -187,15 +187,15 @@ class Game:
           player_list.append(list_tmp) 
           list_tmp = [] 
         else:  # 컴퓨터일 때
-          count = 0
-          while count < 2:
+          cnt = 0
+          while cnt < 2:
             num = random.randint(0,len(self.player)-1)
             if num != i:
               list_tmp.append(num)
-              count += 1
+              cnt += 1
           player_list.append(list_tmp) 
           list_tmp = []
-          count = 0
+          cnt = 0
       # 첫 턴 사람부터 총 쏘기
       next_player = turn_player
       while True:
