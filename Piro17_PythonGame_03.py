@@ -250,7 +250,7 @@ class Game:
       user = self.player[len(self.player) - 1].name
       cnt = 0
       
-      print("현재 사람들 중 한명을 지목하여 ㅇㅇ 좋아!를 입력해주세요 (본인 제외)")
+      print("❗현재 사람들 중 한명을 지목하여 ㅇㅇ 좋아!를 입력해주세요 (본인 제외)❗")
       while True:
         try:              
           name = input("술도 마셨는데 좋아게임할까? ")[0:2]
@@ -285,10 +285,12 @@ class Game:
                     react = 1
                     break
             cnt += 1
-
             if name != user:
               react = random.randint(0, 1)
-              print(reaction[react])
+              if react == 0:
+                print("➡ ", name, ":", reaction[0], "😂")
+              elif react == 1:
+                print("➡ ", name, ":", reaction[1], "😍")
 
             if react == 0: # 칵 퉤
               for i in range(len(self.player)):
@@ -296,7 +298,14 @@ class Game:
                   self.player[i].rejection += 1
                   if self.player[i].rejection == 3:
                     self.player[i].drink_amount += 1
-                    exit()
+                    print(f"아 누가누가 술을 마셔😲 {now}이(가) 술을 마셔🤪 원~~~샷❗🧨")
+                    self.decideTurn()
+                    return
+                  for i in range(len(self.player)):
+                    if self.player[i].name != now:
+                      list.append(i)
+                  a = random.randint(0, len(list) - 1)
+                  name = self.player[list[a]].name
             elif react == 1: # 나도 좋아
                 now = name
 
