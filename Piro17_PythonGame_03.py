@@ -1,5 +1,4 @@
 import random
-from turtle import Turtle
 import requests
 
 class Player:
