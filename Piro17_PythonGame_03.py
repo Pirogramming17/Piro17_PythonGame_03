@@ -110,9 +110,9 @@ class Game:
             try:
               print(f'{self.player[self.turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : ', end='')
               selected_game = int(input()) 
+              if selected_game < 0 or selected_game > 5:
+                raise ValueError
             except ValueError:
-              print('잘못 선택하셨습니다. 다시 선택해 주세요.')
-            if selected_game < 0 or selected_game > 5:
               print('잘못 선택하셨습니다. 다시 선택해 주세요.')
             else:
               break
@@ -125,7 +125,7 @@ class Game:
           else:
             while True:
               try:
-                selected_game = 1 #random.randint(1,5)
+                selected_game = random.randint(1,5)
                 print(f'{self.player[self.turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : {selected_game}')
               except ValueError:
                 print('잘못 선택하셨습니다. 다시 선택해 주세요.')
@@ -179,8 +179,8 @@ class Game:
     def game_1(self): # 사랑의 총알 게임
       '''술게임 1'''
       # TODO 3
-      print(self.player[self.turn_player].name,'님이 술래! 😁')
-      print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!')
+      print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+      print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
       player_list = [] # list_tmp 리스트of 리스트 ex) [[1,2],[2,2],[0,1]]-> 자신을 제외한 2씩명 중복 지목
       list_tmp = [] # 임시 리스트
@@ -188,8 +188,17 @@ class Game:
 
       for i in range(len(self.player)):  
         if i == len(self.player)-1:  # 사용자일 때
-          print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
-          selected_player = (input().split())
+          while True:
+            try:
+              print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
+              selected_player = (input().split())
+            except ValueError:
+              print('잘못 선택하셨습니다. 다시 선택해 주세요.')
+            for i in range(2):
+              if self.player[self.turn_player].name == selected_player[i]:
+                print('자신은 지목 불가!. 다시 선택해 주세요.')
+            break
+          print('\n')
           for j in range(len(self.player)):
             for k in range(2):
               if self.player[j].name == selected_player[k]:
@@ -206,33 +215,31 @@ class Game:
           player_list.append(list_tmp) 
           list_tmp = []
           cnt = 0
+      for i in range(len(player_list)): #처음 두명씩 가리키는 모습
+        print(f'{self.player[i].name} 👉 {self.player[player_list[i][0]].name} 👉 {self.player[player_list[i][1]].name}')
+      print('\n')
+      print('='*20)
       # 첫 턴 사람부터 총 쏘기
       next_player = self.turn_player
       while True:
         if len(player_list[next_player])!= 0:
+          print(f'{self.player[next_player].name}',end='')
           next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
+          print(f' 👉 {self.player[next_player].name} 빵!!\n\n')
+          for i in range(len(player_list)):
+            print(f'{self.player[i].name}',end='')
+            for j in range(len(player_list[i])):
+              print(f' 👉 {self.player[player_list[i][j]].name}',end='')
+            print('\n')
+          print('='*20)
         else: # 손을 다 내린상태에서 맞았을 때 
           self.player[next_player].drink_amount += 1
-          self.player[next_player].drink_limit -= 1
+          #self.player[next_player].drink_limit -= 1
+          print(f'{self.player[next_player].name} : 😱 으악!! 😱')
           self.decideTurn()
           self.play_game()
 
-
-
-
-
-      
-#       [사랑의 총알 게임]
-
-# 인트로 : 사랑의~ 빵! 총알을~ 빵!
-# 누구에게 쏠까요~ 빵빵!
-
-# ① 인트로의 빵빵 때 각자 두 사람을 가리킨다.
-# ② 가리킨 사람을 쏘며 한 손을 내린다.
-# (맨 처음에 쏘는 사람은 손을 내리지 않는다)
-# ③ 총알을 맞은 사람이 또다시 다른 사람을 쏜다.
-# ④ 반복하여 총이 없는 상태(손을 다 내린 상태)에서 맞은 사람이 마신다.
-# (총 3회 맞았을 때)
+        
 
     def game_2(self): 
       '''술게임 2'''
