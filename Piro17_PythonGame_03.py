@@ -69,7 +69,7 @@ class Game:
       else:
         print("게임을 진행하지 않습니다.")
         exit()
-     
+    
     def play_game(self):
       '''술게임을 진행하는 함수'''
       wave = 69 # 물결수-> 나중에 제거
@@ -112,9 +112,9 @@ class Game:
             try:
               print(f'{self.player[self.turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : ', end='')
               selected_game = int(input()) 
+              if selected_game < 0 or selected_game > 5:
+                raise ValueError
             except ValueError:
-              print('잘못 선택하셨습니다. 다시 선택해 주세요.')
-            if selected_game < 0 or selected_game > 5:
               print('잘못 선택하셨습니다. 다시 선택해 주세요.')
             else:
               break
@@ -172,17 +172,17 @@ class Game:
 
     #매 술게임이 끝날 때마다 벌칙자(술마시는 사람)이 결정되고, 그 사람의 마신 잔 수를 ++해줘야 함.
 
-    def game_0(self):
-      print('게임실행')
-      print('사용자가 벌칙')
-      self.player[-1].drink_amount += 1
-      self.decideTurn()
+    # def game_0(self):
+    #   print('게임실행')
+    #   print('사용자가 벌칙')
+    #   self.player[-1].drink_amount += 1
+    #   self.decideTurn()
 
     def game_1(self): # 사랑의 총알 게임
       '''술게임 2'''
       # TODO 3
-      print(self.player[self.turn_player].name,'님이 술래! 😁')
-      print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!')
+      print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+      print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
       player_list = [] # list_tmp 리스트of 리스트 ex) [[1,2],[2,2],[0,1]]-> 자신을 제외한 2씩명 중복 지목
       list_tmp = [] # 임시 리스트
@@ -190,8 +190,17 @@ class Game:
 
       for i in range(len(self.player)):  
         if i == len(self.player)-1:  # 사용자일 때
-          print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
-          selected_player = (input().split())
+          while True:
+            try:
+              print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
+              selected_player = (input().split())
+            except ValueError:
+              print('잘못 선택하셨습니다. 다시 선택해 주세요.')
+            for i in range(2):
+              if self.player[self.turn_player].name == selected_player[i]:
+                print('자신은 지목 불가!. 다시 선택해 주세요.')
+            break
+          print('\n')
           for j in range(len(self.player)):
             for k in range(2):
               if self.player[j].name == selected_player[k]:
@@ -199,24 +208,38 @@ class Game:
           player_list.append(list_tmp) 
           list_tmp = [] 
         else:  # 컴퓨터일 때
-          count = 0
-          while count <= 2:
+          cnt = 0
+          while cnt < 2:
             num = random.randint(0,len(self.player)-1)
             if num != i:
               list_tmp.append(num)
-              count += 1
+              cnt += 1
           player_list.append(list_tmp) 
           list_tmp = []
-          count = 0
+          cnt = 0
+      for i in range(len(player_list)): #처음 두명씩 가리키는 모습
+        print(f'{self.player[i].name} 👉 {self.player[player_list[i][0]].name} 👉 {self.player[player_list[i][1]].name}')
+      print('\n')
+      print('='*20)
       # 첫 턴 사람부터 총 쏘기
       next_player = self.turn_player
       while True:
         if len(player_list[next_player])!= 0:
-          next_player = selected_player[next_player].pop(random.randint(0,1))
+          print(f'{self.player[next_player].name}',end='')
+          next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
+          print(f' 👉 {self.player[next_player].name} 빵!!\n\n')
+          for i in range(len(player_list)):
+            print(f'{self.player[i].name}',end='')
+            for j in range(len(player_list[i])):
+              print(f' 👉 {self.player[player_list[i][j]].name}',end='')
+            print('\n')
+          print('='*20)
         else: # 손을 다 내린상태에서 맞았을 때 
-          self.player[i].drink_amount += 1
-          self.player[i].drink_limit -= 1
-          self.play_game(i)
+          self.player[next_player].drink_amount += 1
+          #self.player[next_player].drink_limit -= 1
+          print(f'{self.player[next_player].name} : 😱 으악!! 😱')
+          self.decideTurn()
+          self.play_game()
 
     def game_2(self): 
       '''술게임 2'''
