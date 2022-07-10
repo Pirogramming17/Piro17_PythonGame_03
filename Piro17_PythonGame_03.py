@@ -1,6 +1,6 @@
 import random
 from turtle import Turtle
-import requests
+# import requests
 
 class Player:
     def __init__(self, name, drink_limit, drink_amount):
@@ -280,6 +280,75 @@ class Game:
     def game_3(self):
       '''술게임 3'''
       # TODO 5
+      print('(ง˙∇˙)ว 삼육구 삼육구 삼육구 삼육구 (ง˙∇˙)ว')
+      your_turn = ''
+      cur_num = 1
+      is_go = True
+
+      #입력값에 3,6,9가 들어있는지 확인 하는 함수
+      def claps(cur_num):
+          cur_num_str = str(cur_num)
+          count_369 = 0
+
+          c = str(cur_num).count('3')+str(cur_num).count('6')+str(cur_num).count('9')
+          if c==0: #3,6,9가 포함되어 있지 않는 경우
+              count_369 = 0
+              return count_369
+          else: # 3,6,9가 포함되어 있는 경우
+              count_369 = 1*c
+              return count_369
+
+      #'짝' 리턴하는 함수
+      def to_clap(count_369, clap_sound = '짝'):
+          return count_369 * clap_sound
+
+      #사용자가 제대로 입력했는지 확인하는 함수
+      def you_right(cur_num, your_turn):
+          count_369 = claps(cur_num)
+          if count_369 != 0 and your_turn in to_clap(count_369): #짝 차례
+              return 1
+          elif count_369 == 0 and your_turn == str(cur_num): #숫자 차례
+              return 2
+          else:
+              return False
+
+      while is_go == True:
+          flag = True
+          num_ran = random.randint(1,7)
+          count_369 = claps(cur_num)
+          for i in range(len(self.player)-1):
+              count_369 = claps(cur_num)
+              if num_ran != 2:
+                  if count_369 == 0:
+                      print(self.player[i].name,f': {cur_num}')
+                  else:
+                      print(self.player[i].name,f': {to_clap(count_369)}')
+                  cur_num += 1
+              else:
+                  if count_369 == 0:
+                    print(self.player[i].name, '짝')
+                  elif count_369 == 1:
+                    print(self.player[i].name,f': {cur_num}')
+                  else:
+                      print(self.player[i].name,'짝')
+                  print(self.player[i].name,'벌칙!')
+                  self.player[i].drink_amount += 1
+                  flag = False
+                  break
+          if flag == False:
+            break
+
+          your_turn = input("네 차례: ")
+          if you_right(cur_num, your_turn) == 1:
+              cur_num += 1
+              continue
+          if you_right(cur_num, your_turn) == 2:
+              cur_num += 1
+              continue
+          else:
+              print(self.user_name, '벌칙!')
+              is_go = False
+
 
     def game_4(self):
       '''술게임 4'''
@@ -289,68 +358,68 @@ class Game:
       '''술게임 5 (크롤링)'''
       # TODO 7
       
-      turn = self.turn_player #게임을 고른 사람부터 시작
-      characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
-      choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
-      ans_list = [] #이미 나온 답을 저장하는 리스트
-      wrong_flag = False #틀렸는지 알려주는 플래그
+      # turn = self.turn_player #게임을 고른 사람부터 시작
+      # characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
+      # choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
+      # ans_list = [] #이미 나온 답을 저장하는 리스트
+      # wrong_flag = False #틀렸는지 알려주는 플래그
 
-      word_list = []
-      url = f"https://wordrow.kr/초성/{choseong}" 
-      response = requests.get(url)
+      # word_list = []
+      # url = f"https://wordrow.kr/초성/{choseong}" 
+      # response = requests.get(url)
 
-      from bs4 import BeautifulSoup as bs
-      soup = bs(response.text, "html.parser")
+      # from bs4 import BeautifulSoup as bs
+      # soup = bs(response.text, "html.parser")
 
-      raw_words = soup.select(".sub-heading + .larger > ul > li")
+      # raw_words = soup.select(".sub-heading + .larger > ul > li")
       
-      for raw_word in raw_words:
-        word_list.append(raw_word.select_one("b").text)
+      # for raw_word in raw_words:
+      #   word_list.append(raw_word.select_one("b").text)
       
-      print(word_list)
+      # print(word_list)
       
-      print('%s 부터 시작! 😜' %self.player[turn].name)
-      print('다음 초성에 해당하는 단어를 말해주세요! %s' %choseong)
+      # print('%s 부터 시작! 😜' %self.player[turn].name)
+      # print('다음 초성에 해당하는 단어를 말해주세요! %s' %choseong)
       
-      while True :
-        if turn == len(self.player)-1 : #현재 차례가 사용자라면
-          ans = input('%s : ' %(self.player[turn].name))
-          if ans in word_list and ans not in ans_list : #맞는 답을 말했다면
-            print('⭕🙆‍♂️ 통과!!! 🙆‍♂️⭕')
-            ans_list.append(ans)
-            turn = 0
-          elif ans in ans_list : #이미 나왔던 답이라면
-            print('❌🙅‍♂️그건 이미 나온 단어인데!!!❌🙅‍♂️ 바보!!!👎👎👎')
-            wrong_flag = True
-            break
-          else : #틀린 답을 말했다면
-            print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
-            wrong_flag = True
-            break
-        else : #현재 차례가 컴퓨터라면
-          pass_or_fail = random.randint(0,3) #0,1,2,3 중 하나를 뽑는다
-          if pass_or_fail == 0 : #0이면 틀리기
-            print('%s : 모...모르겠는데!!! 🙄💦' %(self.player[turn].name))
-            print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
-            wrong_flag = True
-            break
-          else : #0이 아니면 정답 말하기
-            ans = random.choice(word_list)
-            print('%s : %s' %(self.player[turn].name, ans))
-            if ans in ans_list : #이미 나왔던 답이라면
-              print('❌🙅‍♂️그건 이미 나온 단어인데!!!❌🙅‍♂️ 바보!!!👎👎👎')
-              wrong_flag = True
-              break
-            else :
-              print('⭕🙆‍♂️ 통과!!! 🙆‍♂️⭕')
-              ans_list.append(ans)
-              turn += 1
+      # while True :
+      #   if turn == len(self.player)-1 : #현재 차례가 사용자라면
+      #     ans = input('%s : ' %(self.player[turn].name))
+      #     if ans in word_list and ans not in ans_list : #맞는 답을 말했다면
+      #       print('⭕🙆‍♂️ 통과!!! 🙆‍♂️⭕')
+      #       ans_list.append(ans)
+      #       turn = 0
+      #     elif ans in ans_list : #이미 나왔던 답이라면
+      #       print('❌🙅‍♂️그건 이미 나온 단어인데!!!❌🙅‍♂️ 바보!!!👎👎👎')
+      #       wrong_flag = True
+      #       break
+      #     else : #틀린 답을 말했다면
+      #       print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
+      #       wrong_flag = True
+      #       break
+      #   else : #현재 차례가 컴퓨터라면
+      #     pass_or_fail = random.randint(0,3) #0,1,2,3 중 하나를 뽑는다
+      #     if pass_or_fail == 0 : #0이면 틀리기
+      #       print('%s : 모...모르겠는데!!! 🙄💦' %(self.player[turn].name))
+      #       print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
+      #       wrong_flag = True
+      #       break
+      #     else : #0이 아니면 정답 말하기
+      #       ans = random.choice(word_list)
+      #       print('%s : %s' %(self.player[turn].name, ans))
+      #       if ans in ans_list : #이미 나왔던 답이라면
+      #         print('❌🙅‍♂️그건 이미 나온 단어인데!!!❌🙅‍♂️ 바보!!!👎👎👎')
+      #         wrong_flag = True
+      #         break
+      #       else :
+      #         print('⭕🙆‍♂️ 통과!!! 🙆‍♂️⭕')
+      #         ans_list.append(ans)
+      #         turn += 1
             
             
-      if wrong_flag == True :
-        print('아 누가누가 술을 마셔😲 %s이(가) 술을 마셔🤪 원~~~샷❗🧨' %self.player[turn].name)
-        self.player[turn].drink_amount += 1
-        self.decideTurn()
+      # if wrong_flag == True :
+      #   print('아 누가누가 술을 마셔😲 %s이(가) 술을 마셔🤪 원~~~샷❗🧨' %self.player[turn].name)
+      #   self.player[turn].drink_amount += 1
+      #   self.decideTurn()
       
         
       
