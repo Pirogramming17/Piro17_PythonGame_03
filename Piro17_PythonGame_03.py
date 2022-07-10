@@ -1,4 +1,5 @@
 import random
+import requests
 
 class Player:
     def __init__(self, name, drink_limit, drink_amount):
@@ -34,7 +35,7 @@ class Game:
         print("~" * 70)
         while True:
           try:
-            self.drink_limit = int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5을 선택해주세요) : "))*2
+            self.drink_limit = int(input("당신의 치사량(주량)은 얼마만큼인가요?(1~5을 선택해주세요) : "))
             if self.drink_limit < 1 or self.drink_limit > 5:
               raise ValueError
             break
@@ -177,61 +178,8 @@ class Game:
       self.decideTurn()
 
     def game_1(self): # 사랑의 총알 게임
-      '''술게임 1'''
+      '''술게임 2'''
       # TODO 3
-      print(self.player[self.turn_player].name,'님이 술래! 😁')
-      print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!')
-
-      player_list = [] # list_tmp 리스트of 리스트 ex) [[1,2],[2,2],[0,1]]-> 자신을 제외한 2씩명 중복 지목
-      list_tmp = [] # 임시 리스트
-      selected_player = [] # 사용자가 선택한 사람2명의 리스트
-
-      for i in range(len(self.player)):  
-        if i == len(self.player)-1:  # 사용자일 때
-          print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
-          selected_player = (input().split())
-          for j in range(len(self.player)):
-            for k in range(2):
-              if self.player[j].name == selected_player[k]:
-                list_tmp.append(j)
-          player_list.append(list_tmp) 
-          list_tmp = [] 
-        else:  # 컴퓨터일 때
-          count = 0
-          while count <= 2:
-            num = random.randint(0,len(self.player)-1)
-            if num != i:
-              list_tmp.append(num)
-              count += 1
-          player_list.append(list_tmp) 
-          list_tmp = []
-          count = 0
-      # 첫 턴 사람부터 총 쏘기
-      next_player = self.turn_player
-      while True:
-        if len(player_list[next_player])!= 0:
-          next_player = selected_player[next_player].pop(random.randint(0,1))
-        else: # 손을 다 내린상태에서 맞았을 때 
-          self.player[i].drink_amount += 1
-          self.player[i].drink_limit -= 1
-          self.play_game(i)
-
-
-
-
-
-      
-#       [사랑의 총알 게임]
-
-# 인트로 : 사랑의~ 빵! 총알을~ 빵!
-# 누구에게 쏠까요~ 빵빵!
-
-# ① 인트로의 빵빵 때 각자 두 사람을 가리킨다.
-# ② 가리킨 사람을 쏘며 한 손을 내린다.
-# (맨 처음에 쏘는 사람은 손을 내리지 않는다)
-# ③ 총알을 맞은 사람이 또다시 다른 사람을 쏜다.
-# ④ 반복하여 총이 없는 상태(손을 다 내린 상태)에서 맞은 사람이 마신다.
-# (총 3회 맞았을 때)
 
     def game_2(self): 
       '''술게임 2'''
@@ -244,55 +192,12 @@ class Game:
     def game_4(self):
       '''술게임 4'''
       # TODO 6
-      reaction = ["캌 퉤", "나도 좋아"]
-      name = input("술도 마셨는데 좋아게임할까? ")
-      while True:
-        try:
-          flag = False
-          for i in range(len(self.player)):
-            if name[0:2] in self.player[i].name:
-              flag = True
-          if flag == False:
-            raise ValueError
-        except ValueError:
-          print("잘못 입력하셨습니다. 다시 입력해주세요.")
-        else:
-          react = random.randint(0, 1)
-          print(reaction[react])
-
-          if react == 0: # 칵 퉤
-            while True:
-              for i in range(len(self.player)):
-                if name[0:2] == self.player[i].name:
-                  self.player[i].rejection += 1
-                  if self.player[i].rejection == 3:
-                    self.player[i].drink_amount += 1
-
-              list = []
-              for i in range(len(self.player)):
-                if name[0:2] != self.player[i].name:
-                  list.append(i)
-              a = random.randint(0, len(list) - 1)
-              if a != len(list) - 1:
-                print(self.player[list[a]].name, "좋아!")
-
-              react = random.randint(0, 1)
-              if react == 1:
-                break    
-          else: # 나도 좋아
-              list = []
-              for i in range(len(self.player)):
-                if name[0:2] != self.player[i].name:
-                  list.append(i)
-              a = random.randint(0, len(list) - 1)
-              if a != len(list) - 1:
-                print(self.player[list[a]].name, "좋아!")
-              else:
-                input()
                 
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
+
+
 
 
 game = Game()
