@@ -397,7 +397,17 @@ class Game:
       
       tofu_match = dict()
       
-      print("-"*35)
+      print("-"*70)
+      print("-"*70)
+      print("""           
+  _____   U  ___ u  ____      _   _        ____      _      __  __  U _____ u 
+ |_ " _|   \/"_ \/U|  _"\ uU |"|u| |    U /"___|uU  /"\  uU|' \/ '|u\| ___"|/ 
+   | |     | | | |\| |_) |/ \| |\| |    \| |  _ / \/ _ \/ \| |\/| |/ |  _|"   
+  /| |\.-,_| |_| | |  __/    | |_| |     | |_| |  / ___ \  | |  | |  | |___   
+ u |_|U \_)-\___/  |_|      <<\___/       \____| /_/   \_\ |_|  |_|  |_____|  
+ _// \\_     \\    ||>>_   (__) )(        _)(|_   \\    >><<,-,,-.   <<   >>  
+(__) (__)   (__)  (__)__)      (__)      (__)__) (__)  (__)(./  \.) (__) (__)                          
+           """)
       print("\n두부두부두부✨ 으쌰으쌰으쌰으쌰!✨\n")
       print("두부 게임을 시작합니다.")
       print('\n🚨주의 사항: 문제에 알맞은 모 수에 해당하는 사람의 이름을 !똑같이! 입력하세요 (철자 틀릴 시 오답으로 간주)🚨\n')
@@ -408,7 +418,7 @@ class Game:
             tofu_player.append(f'두부{i}')
 
         random.shuffle(tofu_player)
-        print("-"*35)
+        print("-"*70)
         print("순서는 다음과 같습니다")
         print(tofu_player)
 
@@ -451,17 +461,17 @@ class Game:
             break
           else:                            #컴퓨터 차례에는 랜덤으로 답 받기
             print(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?")
-            t_f = random.randint(0,1)
+            t_f = random.randint(0,1)      #0일때는 정답, 1일 때는 오답처리
             if t_f == 0:
                 answer = tofu_match[quiz]
             else:
-              w_answer = random.randint(1,5)
+              r_answer = random.randint(1,5)
               while True:
-                if w_answer == quiz:
-                  w_answer = random.randint(1,5)
+                if r_answer == quiz:
+                  r_answer = random.randint(1,5)
                 else:
                   break
-              w_answer = answer   
+              answer = tofu_match[r_answer]
             print(f"{answer}입니다.")
             break
             
@@ -473,7 +483,7 @@ class Game:
           print("\n틀렸습니다!")
           print(f'\n아 누가누가 술을 마셔😲 {self.player[self.turn_player].name}(가) 술을 마셔🤪 원~~~샷❗🧨 원샷!')
           self.player[self.turn_player].drink_amount += 1
-          print("-"*7,"게임을 종료합니다.","-"*7)
+          print("-"*25,"게임을 종료합니다.","-"*25)
           self.decideTurn()
           break
 
