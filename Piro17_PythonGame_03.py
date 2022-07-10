@@ -68,13 +68,14 @@ class Game:
       if turn_player == 5: # turn_player 가 사용자일 때
         start_key : input('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"를, 계속하고 싶으면 아무키나 입력해 주세요! :')
         if start_key == 'exit':
-          print('술게임을 종료합니다.안녕~')
+          print('술게임을 종료합니다. 안녕~')
           print('~'*wave)
           exit() 
         else:
           while True:
             try:
-              selected_game = int(input(f'{self.player[turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : ')) 
+              print(f'{self.player[turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : ',end='')
+              selected_game = int(input()) 
             except ValueError:
               print('잘못 선택하셨습니다. 다시 선택해 주세요.')
             if selected_game <= 0 or selected_game > 5:
