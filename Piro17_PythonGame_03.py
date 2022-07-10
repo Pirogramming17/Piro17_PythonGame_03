@@ -188,7 +188,7 @@ class Game:
           list_tmp = [] 
         else:  # 컴퓨터일 때
           count = 0
-          while count <= 2:
+          while count < 2:
             num = random.randint(0,len(self.player)-1)
             if num != i:
               list_tmp.append(num)
@@ -200,7 +200,7 @@ class Game:
       next_player = turn_player
       while True:
         if len(player_list[next_player])!= 0:
-          next_player = player_list[next_player].pop(random.randint(0,1))
+          next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
         else: # 손을 다 내린상태에서 맞았을 때 
           self.player[next_player].drink_amount += 1
           self.player[next_player].drink_limit -= 1
