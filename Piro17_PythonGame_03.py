@@ -60,6 +60,7 @@ class Game:
             self.player.append(Player(self.name, self.drink_limit, 0))
             break
         print("~" * 70)
+        self.play_game(len(self.player)-1)
       else:
         print("게임을 진행하지 않습니다.")
         exit()
@@ -116,7 +117,7 @@ class Game:
 
       print('~'*wave)
       # (3) 게임 선택 - 현재 차례가 사용자이면 입력을 받고, 컴퓨터면 랜덤 선택
-      if turn_player == len(self.player): # turn_player 가 사용자일 때
+      if turn_player == len(self.player)-1: # turn_player 가 사용자일 때
         if count != 0: # 첫 시작이 아닐 때
           start_key = input('술게임 진행중! 다른 사람의 턴입니다. 그만하고 싶으면 "exit"를, 계속하고 싶으면 아무키나 입력해 주세요! :')
           if start_key == 'exit':
@@ -143,7 +144,7 @@ class Game:
       print('~'*wave)
       # (4) 선택된 게임 함수 호출
       if selected_game == 1:
-        self.game_1()
+        self.game_1(turn_player)
       elif selected_game == 2:
         self.game_2()
       elif selected_game == 3:
@@ -160,7 +161,7 @@ class Game:
       #술게임 시작 전 필요한 것들을 세팅
       self.set_game()
       #술게임 진행
-      self.play_game()
+      #self.play_game()
 
 
     #매 술게임이 끝날 때마다 벌칙자(술마시는 사람)이 결정되고, 그 사람의 마신 잔 수를 ++해줘야 함.
@@ -199,28 +200,11 @@ class Game:
       next_player = turn_player
       while True:
         if len(player_list[next_player])!= 0:
-          next_player = selected_player[next_player].pop(random.randint(0,1))
+          next_player = player_list[next_player].pop(random.randint(0,1))
         else: # 손을 다 내린상태에서 맞았을 때 
           self.player[next_player].drink_amount += 1
           self.player[next_player].drink_limit -= 1
           self.play_game(next_player)
-
-
-
-
-
-      
-#       [사랑의 총알 게임]
-
-# 인트로 : 사랑의~ 빵! 총알을~ 빵!
-# 누구에게 쏠까요~ 빵빵!
-
-# ① 인트로의 빵빵 때 각자 두 사람을 가리킨다.
-# ② 가리킨 사람을 쏘며 한 손을 내린다.
-# (맨 처음에 쏘는 사람은 손을 내리지 않는다)
-# ③ 총알을 맞은 사람이 또다시 다른 사람을 쏜다.
-# ④ 반복하여 총이 없는 상태(손을 다 내린 상태)에서 맞은 사람이 마신다.
-# (총 3회 맞았을 때)
 
     def game_2(self): 
       '''술게임 2'''
