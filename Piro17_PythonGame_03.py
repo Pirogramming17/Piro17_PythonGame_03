@@ -525,6 +525,8 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       print("두부 게임을 시작합니다.")
       print('\n🚨주의 사항: 문제에 알맞은 모 수에 해당하는 사람의 이름을 !똑같이! 입력하세요 (철자 틀릴 시 오답으로 간주)🚨\n')
 
+      turn = self.turn_player #게임을 고른 사람부터 시작
+      
       while True:
         if len(tofu_player) < 5:
           for i in range(1,5-len(tofu_player)+1):
@@ -565,12 +567,13 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
             quiz = random.randint(1,5)
           else:
             break
-
-          
+        
+        
+        
         while True: #사용자 차례에서는 input으로 답 받기
-          if self.turn_player == len(self.player)-1:
-            answer = input(f"\n❗ QUIZ! : {quiz}모는 누구일까요? \n (😎 {self.player[self.turn_player].name}) : ")
-            break
+          if turn == len(self.player)-1:
+            answer = input(f"\n❗ QUIZ! : {quiz}모는 누구일까요? \n (😎 {self.player[turn].name}) : ")
+
           else:                            #컴퓨터 차례에는 랜덤으로 답 받기
             print(f"\n❗ QUIZ! : {quiz}모는 누구일까요?")
             t_f = random.randint(0,1)      #0일때는 정답, 1일 때는 오답처리
@@ -584,20 +587,25 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
                 else:
                   break
               answer = tofu_match[r_answer]
-            print(f"😎 {self.player[self.turn_player].name} : {answer}입니다.")
+            print(f"😎 {self.player[turn].name} : {answer}입니다.")
+           
+          if tofu_match[quiz] == answer:
+            print("\n정답!")
+            print("두부게임 계속 진행합니다")
+            if turn == self.turn_player :
+              turn = 0
+            else :
+              turn += 1
             break
+          else:
+            print("\n틀렸습니다!")
+            print(f'\n아 누가누가 술을 마셔😲 {self.player[turn].name}이(가) 술을 마셔🤪 원~~~샷❗🧨')
+            self.player[turn].drink_amount += 1
+            print("-"*25,"게임을 종료합니다.","-"*25)
+            self.decideTurn()
+            return 0
+      
             
-        if tofu_match[quiz] == answer:
-          print("\n정답!")
-          print("두부게임 계속 진행합니다")
-          self.turn_player -= 1
-        else:
-          print("\n틀렸습니다!")
-          print(f'\n아 누가누가 술을 마셔😲 {self.player[self.turn_player].name}(가) 술을 마셔🤪 원~~~샷❗🧨 원샷!')
-          self.player[self.turn_player].drink_amount += 1
-          print("-"*25,"게임을 종료합니다.","-"*25)
-          self.decideTurn()
-          break
 
     def game_5(self):
       '''술게임 5 (크롤링)'''
