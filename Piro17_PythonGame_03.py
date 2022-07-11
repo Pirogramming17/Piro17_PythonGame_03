@@ -235,8 +235,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
  |____/ \__,_|_|_|\___|\__|___/  \___/|_|   |______\___/ \_/ \___|                                                                                                                                              
 """)
       print("-"*70)
-      
-      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
+  
 
       print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
@@ -323,6 +322,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       '''술게임 2'''
       # TODO 4
 
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
       reaction = ["캌 퉤", "나도 좋아"]
       now = self.player[len(self.player) - 1].name
       user = self.player[len(self.player) - 1].name
@@ -406,6 +406,8 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
     def game_3(self):
       '''술게임 3'''
       # TODO 5
+      
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
       print("-"*70)
       print("-"*70)
       print("""
@@ -473,6 +475,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
                   print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
                   self.player[i].drink_amount += 1
                   flag = False
+                  self.decideTurn()
                   break
           if flag == False:
             break
@@ -501,6 +504,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       # 4)5개 중 한개가 기준인 3모로 지목되어 공개된다.
       # 5) 지목된 기준인 3모를 기준으로 문제로 제시되는 n모에 해당하는 사람의 이름을 올바르게 말하면 정답. 틀리면 오답.
       
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
       global answer
       
       tofu_player = []
@@ -610,6 +614,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
       print("-"*70)
       print("-"*70)
       print("""
@@ -631,14 +636,14 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       word_list = []
 
       #데이터 파싱
-      url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start=1&num=10&type3=general&pos=1"
+      url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start=1&num=10"
       text = requests.get(url).text
       data = json.loads(text)['channel']
       total = data['total'] #총 단어의 개수를 먼저 가져온다
       word_amount = 100
 
       for i in range(1,int(total/100)+2) :
-        url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start={i}&num=100&type3=general&pos=1"
+        url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start={i}&num=100"
         text = requests.get(url).text
         data = json.loads(text)['channel']
   
