@@ -126,7 +126,7 @@ class Game:
           else:
             while True:
               try:
-                selected_game = 1 #random.randint(1,5)
+                selected_game = random.randint(1,5)
                 print(f'{self.player[self.turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : {selected_game}')
               except ValueError:
                 print('잘못 선택하셨습니다. 다시 선택해 주세요.')
