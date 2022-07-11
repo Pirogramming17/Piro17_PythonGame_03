@@ -126,7 +126,7 @@ class Game:
           else:
             while True:
               try:
-                selected_game = random.randint(1,5)
+                selected_game = random.randrange(1,6)
                 print(f'{self.player[self.turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : {selected_game}')
               except ValueError:
                 print('잘못 선택하셨습니다. 다시 선택해 주세요.')
@@ -185,7 +185,7 @@ class Game:
         if i == len(self.player)-1:  # 사용자일 때
           while True:
             a = True # 예외처리 성공유무
-            c = 0 # 두 이름이 목록에 있으면 c++
+            c = 0 # 예외처리 -> 이름이 목록에 있으면 c++
             if len(self.player) == 2:
               print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
               print(f'총 인원이 2명이므로 상대방 이름만을 2번 입력 하세요(띄어쓰기 1칸!) : ',end='')
@@ -231,14 +231,14 @@ class Game:
           list_tmp = []
           cnt = 0
       for i in range(len(player_list)): #처음 두명씩 가리키는 모습
-        print(f'{self.player[i].name}: 👉 {self.player[player_list[i][0]].name} 👉 {self.player[player_list[i][1]].name}')
+        print(f'{self.player[player_list[i][0]].name} 👈[{self.player[i].name}]👉 {self.player[player_list[i][1]].name}')
       print('\n')
       print('='*20)
       # 첫 턴 사람부터 총 쏘기
       next_player = self.turn_player
       while True:
         if len(player_list[next_player])!= 0:
-          print(f'{self.player[next_player].name}:',end='')
+          print(f'😁 [{self.player[next_player].name}]:',end='')
           next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
           print(f' 👉 {self.player[next_player].name} 빵!!\n\n')
           for i in range(len(player_list)):
@@ -250,7 +250,8 @@ class Game:
         else: # 손을 다 내린상태에서 맞았을 때 
           self.player[next_player].drink_amount += 1
           #self.player[next_player].drink_limit -= 1
-          print(f'{self.player[next_player].name} : 😱 으악!! 😱')
+          print(f'{self.player[next_player].name} : 😱 으악!! 😱\n')
+          print(f"아 누가누가 술을 마셔😲 {self.player[next_player].name}이(가) 술을 마셔🤪 원~~~샷❗🧨")
           self.decideTurn()
           self.play_game()
 
