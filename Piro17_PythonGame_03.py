@@ -172,8 +172,6 @@ class Game:
           self.game_4()
         elif selected_game == 5:
           self.game_5()
-        elif selected_game == 0:
-          self.game_0()
         # (5) 치사량에 도달한 사람이 생기면 게임 종료 ->(1)안에서 처리  
         
 
@@ -214,7 +212,7 @@ class Game:
 """)
       print("-"*70)
       
-      print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
 
       print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
@@ -279,19 +277,20 @@ class Game:
       next_player = self.turn_player
       while True:
         if len(player_list[next_player])!= 0:
-          print(f'😁 [{self.player[next_player].name}]:',end='')
+          print(f'😁 [{self.player[next_player].name}]',end='')
           next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
-          print(f' 👉 {self.player[next_player].name} 빵!!\n\n')
+          print(f'👉 {self.player[next_player].name} 빵!!\n')
+          print('{:^20}\n'.format('⏬'))
           for i in range(len(player_list)):
-            print(f'{self.player[i].name}:',end='')
+            print(f'[{self.player[i].name}]',end='')
             for j in range(len(player_list[i])):
-              print(f' 👉 {self.player[player_list[i][j]].name}',end='')
+              print(f'👉 {self.player[player_list[i][j]].name} ',end='')
             print('\n')
           print('='*20)
         else: # 손을 다 내린상태에서 맞았을 때 
           self.player[next_player].drink_amount += 1
-          #self.player[next_player].drink_limit -= 1
-          print(f'{self.player[next_player].name} : 😱 으악!! 😱\n')
+          print(f'[{self.player[next_player].name}]님이 무방비 상태에서 총을 맞았습니다!!\n')
+          print(f'😱 {self.player[next_player].name}: 으악!! 😱\n')
           print(f"아 누가누가 술을 마셔😲 {self.player[next_player].name}이(가) 술을 마셔🤪 원~~~샷❗🧨")
           self.decideTurn()
           self.play_game()
@@ -668,4 +667,3 @@ class Game:
 
 game = Game()
 game.game()
-
