@@ -628,18 +628,23 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       print("-"*70)
       print('~~~~~ 💻😵컴퓨터가 단어들을 몽땅 머리에 집어넣는 중입니다🤯🌍 . . . 🙏잠시만 기다려 주세요🙏 ~~~~~')
       turn = self.turn_player #게임을 고른 사람부터 시작
-      characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
-      choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
-      ans_list = [] #이미 나온 답을 저장하는 리스트
-      wrong_flag = False #틀렸는지 알려주는 플래그
+      total = 1001
+      
+      #단어의 개수가 너무 많으면 로딩이 너무 오래걸리기 때문에, 1000개가 넘어가면 초성을 다시 생성하도록 함
+      while total > 1000 :
+        characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
+        choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
+        ans_list = [] #이미 나온 답을 저장하는 리스트
+        wrong_flag = False #틀렸는지 알려주는 플래그
 
-      word_list = []
+        word_list = []
 
-      #데이터 파싱
-      url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start=1&num=10"
-      text = requests.get(url).text
-      data = json.loads(text)['channel']
-      total = data['total'] #총 단어의 개수를 먼저 가져온다
+        #데이터 파싱
+        url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start=1&num=10"
+        text = requests.get(url).text
+        data = json.loads(text)['channel']
+        total = data['total'] #총 단어의 개수를 먼저 가져온다
+        
       word_amount = 100
 
       for i in range(1,int(total/100)+2) :
@@ -658,7 +663,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       print('~'*69)
       
       print('%s 부터 시작! 😜' %self.player[turn].name)
-      print('다음 초성에 해당하는 단어를 말해주세요! %s' %choseong)
+      print('다음 초성에 해당하는 단어를 말해주세요! 👉 [ %s ]' %choseong)
       
       while True :
         if turn == len(self.player)-1 : #현재 차례가 사용자라면
