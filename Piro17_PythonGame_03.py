@@ -410,6 +410,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       print("-"*70)
       
       print('(ง˙∇˙)ว 삼육구 삼육구 삼육구 삼육구 (ง˙∇˙)ว')
+      print('❗\'짝\'이나 숫자 중 하나를 입력해주세요❗\n')
       your_turn = ''
       cur_num = 1
       is_go = True
@@ -435,11 +436,11 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       def you_right(cur_num, your_turn):
           count_369 = claps(cur_num)
           if count_369 != 0 and your_turn in to_clap(count_369): #짝 차례
-              return 1
+            return 1
           elif count_369 == 0 and your_turn == str(cur_num): #숫자 차례
-              return 2
-          else:
-              return False
+            return 2
+          elif count_369 != 0 and your_turn in to_clap(count_369):
+            return False
 
       while is_go == True:
           flag = True
@@ -467,22 +468,20 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
           if flag == False:
             break
 
-          while(1) :
-            your_turn = input(f"{self.player[-1].name} : ")
-            if you_right(cur_num, your_turn) == 1:
-                cur_num += 1
-                break
-            elif you_right(cur_num, your_turn) == 2:
-                cur_num += 1
-                break
-            elif your_turn != '짝':
-                print('짝 또는 숫자만 입력해 주세요.')
-                continue
-            else:
-                print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
-                self.player[-1].drink_amount += 1
-                is_go = False
-          self.decideTurn()
+          your_turn = input(f"{self.player[-1].name} : ")
+          if you_right(cur_num, your_turn) == 1: #짝 차례
+            cur_num += 1
+            continue
+          if you_right(cur_num, your_turn) == 2: #숫자 차례
+            cur_num += 1
+            continue
+          else:
+            print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+            self.player[-1].drink_amount += 1
+            self.decideTurn()
+            is_go = False  
+
+          
 
     def game_4(self):
       '''술게임 4'''
