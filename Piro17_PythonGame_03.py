@@ -405,7 +405,7 @@ class Game:
 
       while is_go == True:
           flag = True
-          num_ran = random.randint(1,7)
+          num_ran = random.randint(1,10)
           count_369 = claps(cur_num)
           for i in range(len(self.player)-1):
               count_369 = claps(cur_num)
@@ -439,8 +439,8 @@ class Game:
               continue
           else:
               print(self.user_name, '벌칙!')
-              print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
-              self.player[i].drink_amount += 1
+              print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+              self.player[-1].drink_amount += 1
               is_go = False
           self.decideTurn()
 
