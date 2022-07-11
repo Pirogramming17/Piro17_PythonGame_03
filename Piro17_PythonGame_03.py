@@ -1,4 +1,6 @@
 import random
+import json
+from bs4 import BeautifulSoup as bs
 import requests
 
 class Player:
@@ -481,6 +483,7 @@ class Game:
       '''술게임 5 (크롤링)'''
       # TODO 7
       
+      print('~~~~~ 💻😵컴퓨터가 단어들을 몽땅 머리에 집어넣는 중입니다🤯🌍 . . . 🙏잠시만 기다려 주세요🙏 ~~~~~')
       turn = self.turn_player #게임을 고른 사람부터 시작
       characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
       choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
@@ -488,18 +491,30 @@ class Game:
       wrong_flag = False #틀렸는지 알려주는 플래그
 
       word_list = []
-      url = f"https://wordrow.kr/초성/{choseong}" 
-      response = requests.get(url)
 
-      from bs4 import BeautifulSoup as bs
-      soup = bs(response.text, "html.parser")
+      #데이터 파싱
+      url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start=1&num=10&type3=general&pos=1"
+      text = requests.get(url).text
+      data = json.loads(text)['channel']
+      total = data['total'] #총 단어의 개수를 먼저 가져온다
+      word_amount = 100
 
-      raw_words = soup.select(".sub-heading + .larger > ul > li")
-      
-      for raw_word in raw_words:
-        word_list.append(raw_word.select_one("b").text)
+      for i in range(1,int(total/100)+2) :
+        url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start={i}&num=100&type3=general&pos=1"
+        text = requests.get(url).text
+        data = json.loads(text)['channel']
+  
+        if i == int(total/100)+1 : #마지막 페이지라면
+          word_amount = total%100
+    
+        for j in range(word_amount) :
+          word = data['item'][j]['word']
+          if word not in word_list and len(word)==2 :
+            word_list.append(data['item'][j]['word'])
       
       print(word_list)
+      print(len(word_list))
+      print('~'*69)
       
       print('%s 부터 시작! 😜' %self.player[turn].name)
       print('다음 초성에 해당하는 단어를 말해주세요! %s' %choseong)
@@ -522,7 +537,7 @@ class Game:
         else : #현재 차례가 컴퓨터라면
           pass_or_fail = random.randint(0,3) #0,1,2,3 중 하나를 뽑는다
           if pass_or_fail == 0 : #0이면 틀리기
-            print('%s : 모...모르겠는데!!! 🙄💦' %(self.player[turn].name))
+            print('%s : 모...모르겠는데... 🙄💦' %(self.player[turn].name))
             print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
             wrong_flag = True
             break
@@ -547,3 +562,7 @@ class Game:
 
 game = Game()
 game.game()
+
+
+
+  
