@@ -172,8 +172,6 @@ class Game:
           self.game_4()
         elif selected_game == 5:
           self.game_5()
-        elif selected_game == 0:
-          self.game_0()
         # (5) 치사량에 도달한 사람이 생기면 게임 종료 ->(1)안에서 처리  
         
 
@@ -214,7 +212,7 @@ class Game:
 """)
       print("-"*70)
       
-      print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
 
       print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
@@ -279,19 +277,20 @@ class Game:
       next_player = self.turn_player
       while True:
         if len(player_list[next_player])!= 0:
-          print(f'😁 [{self.player[next_player].name}]:',end='')
+          print(f'😁 [{self.player[next_player].name}]',end='')
           next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
-          print(f' 👉 {self.player[next_player].name} 빵!!\n\n')
+          print(f'👉 {self.player[next_player].name} 빵!!\n')
+          print('{:^20}\n'.format('⏬'))
           for i in range(len(player_list)):
-            print(f'{self.player[i].name}:',end='')
+            print(f'[{self.player[i].name}]',end='')
             for j in range(len(player_list[i])):
-              print(f' 👉 {self.player[player_list[i][j]].name}',end='')
+              print(f'👉 {self.player[player_list[i][j]].name} ',end='')
             print('\n')
           print('='*20)
         else: # 손을 다 내린상태에서 맞았을 때 
           self.player[next_player].drink_amount += 1
-          #self.player[next_player].drink_limit -= 1
-          print(f'{self.player[next_player].name} : 😱 으악!! 😱\n')
+          print(f'[{self.player[next_player].name}]님이 무방비 상태에서 총을 맞았습니다!!\n')
+          print(f'😱 {self.player[next_player].name}: 으악!! 😱\n')
           print(f"아 누가누가 술을 마셔😲 {self.player[next_player].name}이(가) 술을 마셔🤪 원~~~샷❗🧨")
           self.decideTurn()
           self.play_game()
@@ -304,6 +303,10 @@ class Game:
       now = self.player[len(self.player) - 1].name
       user = self.player[len(self.player) - 1].name
       cnt = 0
+
+      # 시작하기 전 초기화
+      for i in range(len(self.player)):
+        self.player[i].rejection = 0
       
       print("-"*70)
       print("-"*70)
@@ -327,7 +330,7 @@ class Game:
               flag = True
           if flag == False:
             raise ValueError
-          if name == now: # 본인 지목
+          if name == now or name == '': # 본인 지목 or 지목 안 할 경우
             raise ValueError
         except ValueError:
           print("잘못 입력하셨습니다. 다시 입력해주세요.")
@@ -437,12 +440,11 @@ class Game:
                   cur_num += 1
               else:
                   if count_369 == 0:
-                    print(self.player[i].name, '짝')
+                    print(self.player[i].name, ': 짝')
                   elif count_369 == 1:
                     print(self.player[i].name,f': {cur_num}')
                   else:
-                      print(self.player[i].name,'짝')
-                  print(self.player[i].name,'벌칙!')
+                      print(self.player[i].name,': 짝')
                   print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
                   self.player[i].drink_amount += 1
                   flag = False
@@ -450,18 +452,21 @@ class Game:
           if flag == False:
             break
 
-          your_turn = input("네 차례: ")
-          if you_right(cur_num, your_turn) == 1:
-              cur_num += 1
-              continue
-          if you_right(cur_num, your_turn) == 2:
-              cur_num += 1
-              continue
-          else:
-              print(self.user_name, '벌칙!')
-              print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
-              self.player[-1].drink_amount += 1
-              is_go = False
+          while(1) :
+            your_turn = input(f"{self.player[-1].name} : ")
+            if you_right(cur_num, your_turn) == 1:
+                cur_num += 1
+                break
+            elif you_right(cur_num, your_turn) == 2:
+                cur_num += 1
+                break
+            elif your_turn != '짝':
+                print('짝 또는 숫자만 입력해 주세요.')
+                continue
+            else:
+                print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+                self.player[-1].drink_amount += 1
+                is_go = False
           self.decideTurn()
 
     def game_4(self):
@@ -472,6 +477,8 @@ class Game:
       #  (Ex. 1모 2모 *3모* 4모 5모)
       # 4)5개 중 한개가 기준인 3모로 지목되어 공개된다.
       # 5) 지목된 기준인 3모를 기준으로 문제로 제시되는 n모에 해당하는 사람의 이름을 올바르게 말하면 정답. 틀리면 오답.
+      
+      global answer
       
       tofu_player = []
       for n in range(len(self.player)):
@@ -503,10 +510,10 @@ class Game:
         random.shuffle(tofu_player)
         print("-"*70)
         print("순서는 다음과 같습니다")
-        print(tofu_player)
+        print('👉 '.join(tofu_player))
 
         std = random.randint(0,4)
-        print(f"{tofu_player[std]}(이)가 3모입니다.")
+        print(f"\n🔊 {tofu_player[std]}(이)가 3모입니다.")
 
         if std < 3:                            #기준이 되는 std 변수의 값에 따라 모 수에 맞춰 리스트 재정렬
           tofu_match[1] = tofu_player[std-2]
@@ -539,10 +546,10 @@ class Game:
           
         while True: #사용자 차례에서는 input으로 답 받기
           if self.turn_player == len(self.player)-1:
-            answer = input(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?: ")
+            answer = input(f"\n❗ QUIZ! : {quiz}모는 누구일까요? \n (😎 {self.player[self.turn_player].name}) : ")
             break
           else:                            #컴퓨터 차례에는 랜덤으로 답 받기
-            print(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?")
+            print(f"\n❗ QUIZ! : {quiz}모는 누구일까요?")
             t_f = random.randint(0,1)      #0일때는 정답, 1일 때는 오답처리
             if t_f == 0:
                 answer = tofu_match[quiz]
@@ -554,7 +561,7 @@ class Game:
                 else:
                   break
               answer = tofu_match[r_answer]
-            print(f"{answer}입니다.")
+            print(f"😎 {self.player[self.turn_player].name} : {answer}입니다.")
             break
             
         if tofu_match[quiz] == answer:
@@ -572,7 +579,17 @@ class Game:
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
-      
+      print("-"*70)
+      print("-"*70)
+      print("""
+  _____       _ _   _       _      _____                      
+ |_   _|     (_) | (_)     | |    / ____|                     
+   | |  _ __  _| |_ _  __ _| |   | |  __  __ _ _ __ ___   ___ 
+   | | | '_ \| | __| |/ _` | |   | | |_ |/ _` | '_ ` _ \ / _ 
+  _| |_| | | | | |_| | (_| | |   | |__| | (_| | | | | | |  __/
+ |_____|_| |_|_|\__|_|\__,_|_|    \_____|\__,_|_| |_| |_|\___|                                                         
+""")
+      print("-"*70)
       print('~~~~~ 💻😵컴퓨터가 단어들을 몽땅 머리에 집어넣는 중입니다🤯🌍 . . . 🙏잠시만 기다려 주세요🙏 ~~~~~')
       turn = self.turn_player #게임을 고른 사람부터 시작
       characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
@@ -602,20 +619,6 @@ class Game:
           if word not in word_list and len(word)==2 :
             word_list.append(data['item'][j]['word'])
       
-      print("-"*70)
-      print("-"*70)
-      print("""
-  _____       _ _   _       _      _____                      
- |_   _|     (_) | (_)     | |    / ____|                     
-   | |  _ __  _| |_ _  __ _| |   | |  __  __ _ _ __ ___   ___ 
-   | | | '_ \| | __| |/ _` | |   | | |_ |/ _` | '_ ` _ \ / _ 
-  _| |_| | | | | |_| | (_| | |   | |__| | (_| | | | | | |  __/
- |_____|_| |_|_|\__|_|\__,_|_|    \_____|\__,_|_| |_| |_|\___|                                                         
-""")
-      print("-"*70)
-      
-      print(word_list)
-      print(len(word_list))
       print('~'*69)
       
       print('%s 부터 시작! 😜' %self.player[turn].name)
@@ -664,7 +667,3 @@ class Game:
 
 game = Game()
 game.game()
-
-
-
-  
