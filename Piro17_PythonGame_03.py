@@ -440,12 +440,11 @@ class Game:
                   cur_num += 1
               else:
                   if count_369 == 0:
-                    print(self.player[i].name, '짝')
+                    print(self.player[i].name, ': 짝')
                   elif count_369 == 1:
                     print(self.player[i].name,f': {cur_num}')
                   else:
-                      print(self.player[i].name,'짝')
-                  print(self.player[i].name,'벌칙!')
+                      print(self.player[i].name,': 짝')
                   print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
                   self.player[i].drink_amount += 1
                   flag = False
@@ -453,18 +452,21 @@ class Game:
           if flag == False:
             break
 
-          your_turn = input("네 차례: ")
-          if you_right(cur_num, your_turn) == 1:
-              cur_num += 1
-              continue
-          if you_right(cur_num, your_turn) == 2:
-              cur_num += 1
-              continue
-          else:
-              print(self.user_name, '벌칙!')
-              print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
-              self.player[-1].drink_amount += 1
-              is_go = False
+          while(1) :
+            your_turn = input(f"{self.player[-1].name} : ")
+            if you_right(cur_num, your_turn) == 1:
+                cur_num += 1
+                break
+            elif you_right(cur_num, your_turn) == 2:
+                cur_num += 1
+                break
+            elif your_turn != '짝':
+                print('짝 또는 숫자만 입력해 주세요.')
+                continue
+            else:
+                print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+                self.player[-1].drink_amount += 1
+                is_go = False
           self.decideTurn()
 
     def game_4(self):
@@ -670,6 +672,3 @@ class Game:
 game = Game()
 game.game()
 
-
-
-  
