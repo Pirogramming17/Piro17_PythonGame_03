@@ -199,6 +199,8 @@ class Game:
     def game_1(self): # 사랑의 총알 게임
       '''술게임 2'''
       # TODO 3
+
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
       
       print("-"*70)
       print("-"*70)
@@ -213,6 +215,7 @@ class Game:
       print("-"*70)
       
       print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+
       print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
       player_list = [] # list_tmp 리스트of 리스트 ex) [[1,2],[2,2],[0,1]]-> 자신을 제외한 2씩명 중복 지목
@@ -222,19 +225,35 @@ class Game:
       for i in range(len(self.player)):  
         if i == len(self.player)-1:  # 사용자일 때
           while True:
+            a = True # 예외처리 성공유무
+            c = 0 # 두 이름이 목록에 있으면 c++
             if len(self.player) == 2:
-              print(f'총 인원이 2명이므로 상대방이름만을 2번 입력 하세요(띄어쓰기 1칸!) : ',end='')
+              print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
+              print(f'총 인원이 2명이므로 상대방 이름만을 2번 입력 하세요(띄어쓰기 1칸!) : ',end='')
               selected_player = (input().split())
             else:
+              print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
               print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
               selected_player = (input().split())
             try:
               for i in range(2):
-                if self.player[self.turn_player].name == selected_player[i]:
+                if self.player[len(self.player)-1].name == selected_player[i]:
+                  print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
                   print('자신은 지목 불가!. 다시 선택해 주세요.')
-              break
+                  a = False
+                  break
+              for j in range(len(self.player)):
+                for k in range(2):
+                  if self.player[j].name == selected_player[k]:
+                    c += 1
+              if c != 2:
+                a = False
+                print('없는 이름입니다!. 다시 선택해 주세요')
             except IndexError:
               print('잘못 선택하셨습니다. 다시 선택해 주세요.')
+              a=False
+            if a:
+              break
           print('\n')
           for j in range(len(self.player)):
             for k in range(2):
