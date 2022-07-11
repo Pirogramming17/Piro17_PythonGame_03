@@ -611,8 +611,6 @@ class Game:
           if word not in word_list and len(word)==2 :
             word_list.append(data['item'][j]['word'])
       
-      print(word_list)
-      print(len(word_list))
       print('~'*69)
       
       print('%s 부터 시작! 😜' %self.player[turn].name)
