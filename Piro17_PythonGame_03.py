@@ -1,4 +1,6 @@
 import random
+import json
+from bs4 import BeautifulSoup as bs
 import requests
 
 class Player:
@@ -21,17 +23,29 @@ class Game:
       ans = input("게임을 진행할까요? (y/n) : ")
       if ans == "y":
         # (2) 사용자 이름 받기
+        
+        print("-"*85)
+        print("-"*85)
+        print("""
+ ██████╗  █████╗ ███╗   ███╗███████╗    ███████╗████████╗ █████╗ ██████╗ ████████╗██╗
+██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝██║
+██║  ███╗███████║██╔████╔██║█████╗      ███████╗   ██║   ███████║██████╔╝   ██║   ██║
+██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   ╚═╝
+╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ███████║   ██║   ██║  ██║██║  ██║   ██║   ██╗
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝
+""")
+        
         self.name = input("오늘 거하게 취해볼 당신의 이름은? : ")
     
         # (3) 본인의 주량 선택하기
         print("~" * 20, end="")
-        print("소주 기준 당신의 주량은? ", end="")
+        print("🍺 소주 기준 당신의 주량은? 🍺", end="")
         print("~" * 20)
-        print("1. 소주 반병(2잔)")
-        print("2. 소주 반병에서 한병(4잔)")
-        print("3. 소주 한병에서 한병 반(6잔)")
-        print("4. 소주 한병 반에서 두병(8잔)")
-        print("5. 소주 두병 이상(10잔)")
+        print(' '*20, "🍺 1. 소주 반병(2잔)")
+        print(' '*20, "🍺 2. 소주 반병에서 한병(4잔)")
+        print(' '*20, "🍺 3. 소주 한병에서 한병 반(6잔)")
+        print(' '*20, "🍺 4. 소주 한병 반에서 두병(8잔)")
+        print(' '*20, "🍺 5. 소주 두병 이상(10잔)")
         print("~" * 70)
         while True:
           try:
@@ -89,6 +103,17 @@ class Game:
         print('~'*wave)
         # 누군가 죽었을때 -> 게임종료
         if dead_flag:
+          print("-"*77)
+          print("-"*77)
+          print("""
+ ██████╗  █████╗ ███╗   ███╗███████╗    ██████╗ ██╗   ██╗███████╗██████╗ ██╗
+██╔════╝ ██╔══██╗████╗ ████║██╔════╝   ██╔═══██╗██║   ██║██╔════╝██╔══██╗██║
+██║  ███╗███████║██╔████╔██║█████╗     ██║   ██║██║   ██║█████╗  ██████╔╝██║
+██║   ██║██╔══██║██║╚██╔╝██║██╔══╝     ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗╚═╝
+╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗   ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║██╗
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝    ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝
+                  """)
+          print("-"*77)
           print(f'{dead_player}이(가) 전사했습니다... 꿈나라에서는 편히 쉬시길..zzz')
           print('~'*wave)
           print(' '*20,"🍺 다음에 술마시면 또 불러주세요~ 안녕! 🍺")
@@ -174,7 +199,23 @@ class Game:
     def game_1(self): # 사랑의 총알 게임
       '''술게임 2'''
       # TODO 3
+
+      print(self.player[self.turn_player].name,'님이 게임을 선택하셨습니다! 😁\n')
+      
+      print("-"*70)
+      print("-"*70)
+      print("""
+  ____        _ _      _                __   _                    
+ |  _ \      | | |    | |              / _| | |                   
+ | |_) |_   _| | | ___| |_ ___    ___ | |_  | |     _____   _____ 
+ |  _ <| | | | | |/ _ \ __/ __|  / _ \|  _| | |    / _ \ \ / / _ 
+ | |_) | |_| | | |  __/ |_\__ \ | (_) | |   | |___| (_) \ V /  __/
+ |____/ \__,_|_|_|\___|\__|___/  \___/|_|   |______\___/ \_/ \___|                                                                                                                                              
+""")
+      print("-"*70)
+      
       print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+
       print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
 
       player_list = [] # list_tmp 리스트of 리스트 ex) [[1,2],[2,2],[0,1]]-> 자신을 제외한 2씩명 중복 지목
@@ -184,19 +225,35 @@ class Game:
       for i in range(len(self.player)):  
         if i == len(self.player)-1:  # 사용자일 때
           while True:
+            a = True # 예외처리 성공유무
+            c = 0 # 두 이름이 목록에 있으면 c++
             if len(self.player) == 2:
-              print(f'총 인원이 2명이므로 상대방이름만을 2번 입력 하세요(띄어쓰기 1칸!) : ',end='')
+              print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
+              print(f'총 인원이 2명이므로 상대방 이름만을 2번 입력 하세요(띄어쓰기 1칸!) : ',end='')
               selected_player = (input().split())
             else:
+              print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
               print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
               selected_player = (input().split())
             try:
               for i in range(2):
-                if self.player[self.turn_player].name == selected_player[i]:
+                if self.player[len(self.player)-1].name == selected_player[i]:
+                  print(f'[{self.player[len(self.player)-1].name}]님!',end=' ')
                   print('자신은 지목 불가!. 다시 선택해 주세요.')
-              break
+                  a = False
+                  break
+              for j in range(len(self.player)):
+                for k in range(2):
+                  if self.player[j].name == selected_player[k]:
+                    c += 1
+              if c != 2:
+                a = False
+                print('없는 이름입니다!. 다시 선택해 주세요')
             except IndexError:
               print('잘못 선택하셨습니다. 다시 선택해 주세요.')
+              a=False
+            if a:
+              break
           print('\n')
           for j in range(len(self.player)):
             for k in range(2):
@@ -246,6 +303,18 @@ class Game:
       now = self.player[len(self.player) - 1].name
       user = self.player[len(self.player) - 1].name
       cnt = 0
+      
+      print("-"*70)
+      print("-"*70)
+      print("""
+  _   _ _               _____                      
+ | \ | (_)             / ____|                     
+ |  \| |_  ___ ___    | |  __  __ _ _ __ ___   ___ 
+ | . ` | |/ __/ _ \   | | |_ |/ _` | '_ ` _ \ / _ 
+ | |\  | | (_|  __/   | |__| | (_| | | | | | |  __/
+ |_| \_|_|\___\___|    \_____|\__,_|_| |_| |_|\___|
+""")
+      print("-"*70)
       
       print("❗현재 사람들 중 한명을 지목하여 ㅇㅇ 좋아!를 입력해주세요 (본인 제외)❗")
       while True:
@@ -309,6 +378,18 @@ class Game:
     def game_3(self):
       '''술게임 3'''
       # TODO 5
+      print("-"*70)
+      print("-"*70)
+      print("""
+  ____    __ ___     _____                      
+ |___ \  / // _ \   / ____|                     
+   __) |/ /| (_) | | |  __  __ _ _ __ ___   ___ 
+  |__ <| '_ \__, | | | |_ |/ _` | '_ ` _ \ / _ 
+  ___) | (_) |/ /  | |__| | (_| | | | | | |  __/
+ |____/ \___//_/    \_____|\__,_|_| |_| |_|\___|
+""")
+      print("-"*70)
+      
       print('(ง˙∇˙)ว 삼육구 삼육구 삼육구 삼육구 (ง˙∇˙)ว')
       your_turn = ''
       cur_num = 1
@@ -355,12 +436,11 @@ class Game:
                   cur_num += 1
               else:
                   if count_369 == 0:
-                    print(self.player[i].name, '짝')
+                    print(self.player[i].name, ': 짝')
                   elif count_369 == 1:
                     print(self.player[i].name,f': {cur_num}')
                   else:
-                      print(self.player[i].name,'짝')
-                  print(self.player[i].name,'벌칙!')
+                      print(self.player[i].name,': 짝')
                   print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
                   self.player[i].drink_amount += 1
                   flag = False
@@ -368,18 +448,21 @@ class Game:
           if flag == False:
             break
 
-          your_turn = input("네 차례: ")
-          if you_right(cur_num, your_turn) == 1:
-              cur_num += 1
-              continue
-          if you_right(cur_num, your_turn) == 2:
-              cur_num += 1
-              continue
-          else:
-              print(self.user_name, '벌칙!')
-              print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
-              self.player[-1].drink_amount += 1
-              is_go = False
+          while(1) :
+            your_turn = input(f"{self.player[-1].name} : ")
+            if you_right(cur_num, your_turn) == 1:
+                cur_num += 1
+                break
+            elif you_right(cur_num, your_turn) == 2:
+                cur_num += 1
+                break
+            elif your_turn != '짝':
+                print('짝 또는 숫자만 입력해 주세요.')
+                continue
+            else:
+                print('아 누가누가 술을 마셔😲',self.player[-1].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+                self.player[-1].drink_amount += 1
+                is_go = False
           self.decideTurn()
 
     def game_4(self):
@@ -397,7 +480,18 @@ class Game:
       
       tofu_match = dict()
       
-      print("-"*35)
+      print("-"*70)
+      print("-"*70)
+      print("""           
+  _______     __           _____                      
+ |__   __|   / _|         / ____|                     
+    | | ___ | |_ _   _   | |  __  __ _ _ __ ___   ___ 
+    | |/ _ \|  _| | | |  | | |_ |/ _` | '_ ` _ \ / _ 
+    | | (_) | | | |_| |  | |__| | (_| | | | | | |  __/
+    |_|\___/|_|  \__,_|   \_____|\__,_|_| |_| |_|\___|                          
+           """)
+      print("-"*70)
+      
       print("\n두부두부두부✨ 으쌰으쌰으쌰으쌰!✨\n")
       print("두부 게임을 시작합니다.")
       print('\n🚨주의 사항: 문제에 알맞은 모 수에 해당하는 사람의 이름을 !똑같이! 입력하세요 (철자 틀릴 시 오답으로 간주)🚨\n')
@@ -408,14 +502,14 @@ class Game:
             tofu_player.append(f'두부{i}')
 
         random.shuffle(tofu_player)
-        print("-"*35)
+        print("-"*70)
         print("순서는 다음과 같습니다")
         print(tofu_player)
 
         std = random.randint(0,4)
         print(f"{tofu_player[std]}(이)가 3모입니다.")
 
-        if std < 3:
+        if std < 3:                            #기준이 되는 std 변수의 값에 따라 모 수에 맞춰 리스트 재정렬
           tofu_match[1] = tofu_player[std-2]
           tofu_match[2] = tofu_player[std-1]
           tofu_match[3] = tofu_player[std]
@@ -447,33 +541,32 @@ class Game:
         while True: #사용자 차례에서는 input으로 답 받기
           if self.turn_player == len(self.player)-1:
             answer = input(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?: ")
-            self.turn_player = 0
             break
           else:                            #컴퓨터 차례에는 랜덤으로 답 받기
             print(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?")
-            t_f = random.randint(0,1)
+            t_f = random.randint(0,1)      #0일때는 정답, 1일 때는 오답처리
             if t_f == 0:
                 answer = tofu_match[quiz]
             else:
-              w_answer = random.randint(1,5)
+              r_answer = random.randint(1,5)
               while True:
-                if w_answer == quiz:
-                  w_answer = random.randint(1,5)
+                if r_answer == quiz:
+                  r_answer = random.randint(1,5)
                 else:
                   break
-              w_answer = answer   
+              answer = tofu_match[r_answer]
             print(f"{answer}입니다.")
             break
             
         if tofu_match[quiz] == answer:
           print("\n정답!")
           print("두부게임 계속 진행합니다")
-          self.turn_player += 1
+          self.turn_player -= 1
         else:
           print("\n틀렸습니다!")
           print(f'\n아 누가누가 술을 마셔😲 {self.player[self.turn_player].name}(가) 술을 마셔🤪 원~~~샷❗🧨 원샷!')
           self.player[self.turn_player].drink_amount += 1
-          print("-"*7,"게임을 종료합니다.","-"*7)
+          print("-"*25,"게임을 종료합니다.","-"*25)
           self.decideTurn()
           break
 
@@ -481,6 +574,7 @@ class Game:
       '''술게임 5 (크롤링)'''
       # TODO 7
       
+      print('~~~~~ 💻😵컴퓨터가 단어들을 몽땅 머리에 집어넣는 중입니다🤯🌍 . . . 🙏잠시만 기다려 주세요🙏 ~~~~~')
       turn = self.turn_player #게임을 고른 사람부터 시작
       characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
       choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
@@ -488,18 +582,42 @@ class Game:
       wrong_flag = False #틀렸는지 알려주는 플래그
 
       word_list = []
-      url = f"https://wordrow.kr/초성/{choseong}" 
-      response = requests.get(url)
 
-      from bs4 import BeautifulSoup as bs
-      soup = bs(response.text, "html.parser")
+      #데이터 파싱
+      url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start=1&num=10&type3=general&pos=1"
+      text = requests.get(url).text
+      data = json.loads(text)['channel']
+      total = data['total'] #총 단어의 개수를 먼저 가져온다
+      word_amount = 100
 
-      raw_words = soup.select(".sub-heading + .larger > ul > li")
+      for i in range(1,int(total/100)+2) :
+        url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start={i}&num=100&type3=general&pos=1"
+        text = requests.get(url).text
+        data = json.loads(text)['channel']
+  
+        if i == int(total/100)+1 : #마지막 페이지라면
+          word_amount = total%100
+    
+        for j in range(word_amount) :
+          word = data['item'][j]['word']
+          if word not in word_list and len(word)==2 :
+            word_list.append(data['item'][j]['word'])
       
-      for raw_word in raw_words:
-        word_list.append(raw_word.select_one("b").text)
+      print("-"*70)
+      print("-"*70)
+      print("""
+  _____       _ _   _       _      _____                      
+ |_   _|     (_) | (_)     | |    / ____|                     
+   | |  _ __  _| |_ _  __ _| |   | |  __  __ _ _ __ ___   ___ 
+   | | | '_ \| | __| |/ _` | |   | | |_ |/ _` | '_ ` _ \ / _ 
+  _| |_| | | | | |_| | (_| | |   | |__| | (_| | | | | | |  __/
+ |_____|_| |_|_|\__|_|\__,_|_|    \_____|\__,_|_| |_| |_|\___|                                                         
+""")
+      print("-"*70)
       
       print(word_list)
+      print(len(word_list))
+      print('~'*69)
       
       print('%s 부터 시작! 😜' %self.player[turn].name)
       print('다음 초성에 해당하는 단어를 말해주세요! %s' %choseong)
@@ -522,7 +640,7 @@ class Game:
         else : #현재 차례가 컴퓨터라면
           pass_or_fail = random.randint(0,3) #0,1,2,3 중 하나를 뽑는다
           if pass_or_fail == 0 : #0이면 틀리기
-            print('%s : 모...모르겠는데!!! 🙄💦' %(self.player[turn].name))
+            print('%s : 모...모르겠는데... 🙄💦' %(self.player[turn].name))
             print('❌🙅‍♂️ 땡!!! 🙅‍♂️❌')
             wrong_flag = True
             break
