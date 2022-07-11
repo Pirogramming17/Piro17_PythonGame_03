@@ -476,6 +476,8 @@ class Game:
       # 4)5개 중 한개가 기준인 3모로 지목되어 공개된다.
       # 5) 지목된 기준인 3모를 기준으로 문제로 제시되는 n모에 해당하는 사람의 이름을 올바르게 말하면 정답. 틀리면 오답.
       
+      global answer
+      
       tofu_player = []
       for n in range(len(self.player)):
         tofu_player.append(self.player[n].name)  
@@ -506,10 +508,10 @@ class Game:
         random.shuffle(tofu_player)
         print("-"*70)
         print("순서는 다음과 같습니다")
-        print(tofu_player)
+        print('👉 '.join(tofu_player))
 
         std = random.randint(0,4)
-        print(f"{tofu_player[std]}(이)가 3모입니다.")
+        print(f"\n🔊 {tofu_player[std]}(이)가 3모입니다.")
 
         if std < 3:                            #기준이 되는 std 변수의 값에 따라 모 수에 맞춰 리스트 재정렬
           tofu_match[1] = tofu_player[std-2]
@@ -542,10 +544,10 @@ class Game:
           
         while True: #사용자 차례에서는 input으로 답 받기
           if self.turn_player == len(self.player)-1:
-            answer = input(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?: ")
+            answer = input(f"\n❗ QUIZ! : {quiz}모는 누구일까요? \n (😎 {self.player[self.turn_player].name}) : ")
             break
           else:                            #컴퓨터 차례에는 랜덤으로 답 받기
-            print(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?")
+            print(f"\n❗ QUIZ! : {quiz}모는 누구일까요?")
             t_f = random.randint(0,1)      #0일때는 정답, 1일 때는 오답처리
             if t_f == 0:
                 answer = tofu_match[quiz]
@@ -557,7 +559,7 @@ class Game:
                 else:
                   break
               answer = tofu_match[r_answer]
-            print(f"{answer}입니다.")
+            print(f"😎 {self.player[self.turn_player].name} : {answer}입니다.")
             break
             
         if tofu_match[quiz] == answer:
