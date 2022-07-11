@@ -343,7 +343,7 @@ class Game:
 
       while is_go == True:
           flag = True
-          num_ran = random.randint(1,7)
+          num_ran = random.randint(1,10)
           count_369 = claps(cur_num)
           for i in range(len(self.player)-1):
               count_369 = claps(cur_num)
