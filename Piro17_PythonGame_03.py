@@ -632,7 +632,7 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       total = 1001
       
       #단어의 개수가 너무 많으면 로딩이 너무 오래걸리기 때문에, 1000개가 넘어가면 초성을 다시 생성하도록 함
-      while total > 1000 :
+      while total > 1000:
         characters = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㄲㄸㅃㅆㅉ';
         choseong = ''.join(i for i in [random.choice(characters) for j in range(2)]) #랜덤 초성 발생
         ans_list = [] #이미 나온 답을 저장하는 리스트
@@ -649,17 +649,18 @@ U  /"\  u |"|   U /"___||'| |'|     \/"_ \/ |'| |'|     \/"_ \/  |"|        U /"
       word_amount = 100
 
       for i in range(1,int(total/100)+2) :
+        print('로 딩 중 . . .')
         url = f"http://opendict.korean.go.kr/api/search?certkey_no=4116&key=8E0ED477826C89563824606AD83272D9&target_type=search&req_type=json&part=word&q={choseong}&start={i}&num=100"
         text = requests.get(url).text
-        data = json.loads(text)['channel']
+        data = json.loads(text)['channel']['item']
   
         if i == int(total/100)+1 : #마지막 페이지라면
           word_amount = total%100
     
         for j in range(word_amount) :
-          word = data['item'][j]['word']
+          word = data[j]['word']
           if word not in word_list and len(word)==2 :
-            word_list.append(data['item'][j]['word'])
+            word_list.append(word)
       
       print('~'*69)
       
