@@ -303,6 +303,10 @@ class Game:
       now = self.player[len(self.player) - 1].name
       user = self.player[len(self.player) - 1].name
       cnt = 0
+
+      # 시작하기 전 초기화
+      for i in range(len(self.player)):
+        self.player[i].rejection = 0
       
       print("-"*70)
       print("-"*70)
@@ -326,7 +330,7 @@ class Game:
               flag = True
           if flag == False:
             raise ValueError
-          if name == now: # 본인 지목
+          if name == now or name == '': # 본인 지목 or 지목 안 할 경우
             raise ValueError
         except ValueError:
           print("잘못 입력하셨습니다. 다시 입력해주세요.")
