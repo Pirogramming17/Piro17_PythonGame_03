@@ -1,5 +1,4 @@
 import random
-from turtle import Turtle
 import requests
 
 class Player:
@@ -69,7 +68,7 @@ class Game:
       else:
         print("게임을 진행하지 않습니다.")
         exit()
-     
+    
     def play_game(self):
       '''술게임을 진행하는 함수'''
       wave = 69 # 물결수-> 나중에 제거
@@ -112,9 +111,9 @@ class Game:
             try:
               print(f'{self.player[self.turn_player].name}(이)가 좋아하는 랜덤 게임~ 랜덤 게임~ 무슨게임? : ', end='')
               selected_game = int(input()) 
+              if selected_game < 0 or selected_game > 5:
+                raise ValueError
             except ValueError:
-              print('잘못 선택하셨습니다. 다시 선택해 주세요.')
-            if selected_game < 0 or selected_game > 5:
               print('잘못 선택하셨습니다. 다시 선택해 주세요.')
             else:
               break
@@ -172,29 +171,312 @@ class Game:
 
     #매 술게임이 끝날 때마다 벌칙자(술마시는 사람)이 결정되고, 그 사람의 마신 잔 수를 ++해줘야 함.
 
-    def game_0(self):
-      print('게임실행')
-      print('사용자가 벌칙')
-      self.player[-1].drink_amount += 1
-      self.decideTurn()
-
     def game_1(self): # 사랑의 총알 게임
       '''술게임 2'''
       # TODO 3
+      print(self.player[self.turn_player].name,'님이 술래! 😁\n')
+      print('사랑의~ 빵! 😍 총알을~ 빵! 😉 누구에게 쏠까요~~ 빵빵!!\n')
+
+      player_list = [] # list_tmp 리스트of 리스트 ex) [[1,2],[2,2],[0,1]]-> 자신을 제외한 2씩명 중복 지목
+      list_tmp = [] # 임시 리스트
+      selected_player = [] # 사용자가 선택한 사람2명의 리스트
+
+      for i in range(len(self.player)):  
+        if i == len(self.player)-1:  # 사용자일 때
+          while True:
+            if len(self.player) == 2:
+              print(f'총 인원이 2명이므로 상대방이름만을 2번 입력 하세요(띄어쓰기 1칸!) : ',end='')
+              selected_player = (input().split())
+            else:
+              print(f'쏠 사람을 2명 선택하세요(띄어쓰기 1칸!) : ',end='')
+              selected_player = (input().split())
+            try:
+              for i in range(2):
+                if self.player[self.turn_player].name == selected_player[i]:
+                  print('자신은 지목 불가!. 다시 선택해 주세요.')
+              break
+            except IndexError:
+              print('잘못 선택하셨습니다. 다시 선택해 주세요.')
+          print('\n')
+          for j in range(len(self.player)):
+            for k in range(2):
+              if self.player[j].name == selected_player[k]:
+                list_tmp.append(j)
+          player_list.append(list_tmp) 
+          list_tmp = [] 
+        else:  # 컴퓨터일 때
+          cnt = 0
+          while cnt < 2:
+            num = random.randint(0,len(self.player)-1)
+            if num != i:
+              list_tmp.append(num)
+              cnt += 1
+          player_list.append(list_tmp) 
+          list_tmp = []
+          cnt = 0
+      for i in range(len(player_list)): #처음 두명씩 가리키는 모습
+        print(f'{self.player[i].name}: 👉 {self.player[player_list[i][0]].name} 👉 {self.player[player_list[i][1]].name}')
+      print('\n')
+      print('='*20)
+      # 첫 턴 사람부터 총 쏘기
+      next_player = self.turn_player
+      while True:
+        if len(player_list[next_player])!= 0:
+          print(f'{self.player[next_player].name}:',end='')
+          next_player = player_list[next_player].pop(random.randint(0,len(player_list[next_player])-1))
+          print(f' 👉 {self.player[next_player].name} 빵!!\n\n')
+          for i in range(len(player_list)):
+            print(f'{self.player[i].name}:',end='')
+            for j in range(len(player_list[i])):
+              print(f' 👉 {self.player[player_list[i][j]].name}',end='')
+            print('\n')
+          print('='*20)
+        else: # 손을 다 내린상태에서 맞았을 때 
+          self.player[next_player].drink_amount += 1
+          #self.player[next_player].drink_limit -= 1
+          print(f'{self.player[next_player].name} : 😱 으악!! 😱')
+          self.decideTurn()
+          self.play_game()
 
     def game_2(self): 
       '''술게임 2'''
       # TODO 4
 
+      reaction = ["캌 퉤", "나도 좋아"]
+      now = self.player[len(self.player) - 1].name
+      user = self.player[len(self.player) - 1].name
+      cnt = 0
+      
+      print("❗현재 사람들 중 한명을 지목하여 ㅇㅇ 좋아!를 입력해주세요 (본인 제외)❗")
+      while True:
+        try:              
+          name = input("술도 마셨는데 좋아게임할까? ")[0:2]
+          flag = False
+          for i in range(len(self.player)):
+            if name in self.player[i].name:
+              flag = True
+          if flag == False:
+            raise ValueError
+          if name == now: # 본인 지목
+            raise ValueError
+        except ValueError:
+          print("잘못 입력하셨습니다. 다시 입력해주세요.")
+        else:
+          while True:
+            list = []
+            if cnt != 0:
+              if react != 0:
+                for i in range(len(self.player)):
+                  if self.player[i].name != now:
+                    list.append(i)
+                a = random.randint(0, len(list) - 1)
+                name = self.player[list[a]].name
+              print(now, ":", name, "좋아!")
+              if name == user:
+                while True:
+                  res = input("'캌 퉤'와 '나도 좋아' 둘 중에 입력해주세요. ")
+                  if res == "캌 퉤":
+                    react = 0
+                    break
+                  elif res == "나도 좋아":
+                    react = 1
+                    break
+            cnt += 1
+            if name != user:
+              react = random.randint(0, 1)
+              if react == 0:
+                print("➡ ", name, ":", reaction[0], "😂")
+              elif react == 1:
+                print("➡ ", name, ":", reaction[1], "😍")
+
+            if react == 0: # 칵 퉤
+              for i in range(len(self.player)):
+                if now == self.player[i].name:
+                  self.player[i].rejection += 1
+                  if self.player[i].rejection == 3:
+                    self.player[i].drink_amount += 1
+                    print(f"아 누가누가 술을 마셔😲 {now}이(가) 술을 마셔🤪 원~~~샷❗🧨")
+                    self.decideTurn()
+                    return
+                  for i in range(len(self.player)):
+                    if self.player[i].name != now:
+                      list.append(i)
+                  a = random.randint(0, len(list) - 1)
+                  name = self.player[list[a]].name
+            elif react == 1: # 나도 좋아
+                now = name
+
     def game_3(self):
       '''술게임 3'''
       # TODO 5
+      print('(ง˙∇˙)ว 삼육구 삼육구 삼육구 삼육구 (ง˙∇˙)ว')
+      your_turn = ''
+      cur_num = 1
+      is_go = True
+
+      #입력값에 3,6,9가 들어있는지 확인 하는 함수
+      def claps(cur_num):
+          cur_num_str = str(cur_num)
+          count_369 = 0
+
+          c = str(cur_num).count('3')+str(cur_num).count('6')+str(cur_num).count('9')
+          if c==0: #3,6,9가 포함되어 있지 않는 경우
+              count_369 = 0
+              return count_369
+          else: # 3,6,9가 포함되어 있는 경우
+              count_369 = 1*c
+              return count_369
+
+      #'짝' 리턴하는 함수
+      def to_clap(count_369, clap_sound = '짝'):
+          return count_369 * clap_sound
+
+      #사용자가 제대로 입력했는지 확인하는 함수
+      def you_right(cur_num, your_turn):
+          count_369 = claps(cur_num)
+          if count_369 != 0 and your_turn in to_clap(count_369): #짝 차례
+              return 1
+          elif count_369 == 0 and your_turn == str(cur_num): #숫자 차례
+              return 2
+          else:
+              return False
+
+      while is_go == True:
+          flag = True
+          num_ran = random.randint(1,7)
+          count_369 = claps(cur_num)
+          for i in range(len(self.player)-1):
+              count_369 = claps(cur_num)
+              if num_ran != 2:
+                  if count_369 == 0:
+                      print(self.player[i].name,f': {cur_num}')
+                  else:
+                      print(self.player[i].name,f': {to_clap(count_369)}')
+                  cur_num += 1
+              else:
+                  if count_369 == 0:
+                    print(self.player[i].name, '짝')
+                  elif count_369 == 1:
+                    print(self.player[i].name,f': {cur_num}')
+                  else:
+                      print(self.player[i].name,'짝')
+                  print(self.player[i].name,'벌칙!')
+                  print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+                  self.player[i].drink_amount += 1
+                  flag = False
+                  break
+          if flag == False:
+            break
+
+          your_turn = input("네 차례: ")
+          if you_right(cur_num, your_turn) == 1:
+              cur_num += 1
+              continue
+          if you_right(cur_num, your_turn) == 2:
+              cur_num += 1
+              continue
+          else:
+              print(self.user_name, '벌칙!')
+              print('아 누가누가 술을 마셔😲',self.player[i].name,'이(가) 술을 마셔🤪 원~~~샷❗🧨')
+              self.player[i].drink_amount += 1
+              is_go = False
+          self.decideTurn()
 
     def game_4(self):
       '''술게임 4'''
-      # TODO 6
-                
-                
+      # [두부 게임 설명]
+      # 1)참가자+ 두부n개 = 총 5개가 리스트 안에서 랜덤으로 섞여 배열을 만든다
+      # 3) 두부 3모를 기준으로 왼쪽으로 갈 수록 1모씩 모 수가 감소하고, 오른쪽으로 갈 수록 1모씩 모 수가 증가한다.
+      #  (Ex. 1모 2모 *3모* 4모 5모)
+      # 4)5개 중 한개가 기준인 3모로 지목되어 공개된다.
+      # 5) 지목된 기준인 3모를 기준으로 문제로 제시되는 n모에 해당하는 사람의 이름을 올바르게 말하면 정답. 틀리면 오답.
+      
+      tofu_player = []
+      for n in range(len(self.player)):
+        tofu_player.append(self.player[n].name)  
+      
+      tofu_match = dict()
+      
+      print("-"*35)
+      print("\n두부두부두부✨ 으쌰으쌰으쌰으쌰!✨\n")
+      print("두부 게임을 시작합니다.")
+      print('\n🚨주의 사항: 문제에 알맞은 모 수에 해당하는 사람의 이름을 !똑같이! 입력하세요 (철자 틀릴 시 오답으로 간주)🚨\n')
+
+      while True:
+        if len(tofu_player) < 5:
+          for i in range(1,5-len(tofu_player)+1):
+            tofu_player.append(f'두부{i}')
+
+        random.shuffle(tofu_player)
+        print("-"*35)
+        print("순서는 다음과 같습니다")
+        print(tofu_player)
+
+        std = random.randint(0,4)
+        print(f"{tofu_player[std]}(이)가 3모입니다.")
+
+        if std < 3:
+          tofu_match[1] = tofu_player[std-2]
+          tofu_match[2] = tofu_player[std-1]
+          tofu_match[3] = tofu_player[std]
+          tofu_match[4] = tofu_player[std+1]
+          tofu_match[5] = tofu_player[std+2]
+        elif std == 3:
+          tofu_match[1] = tofu_player[std-2]
+          tofu_match[2] = tofu_player[std-1]
+          tofu_match[3] = tofu_player[std]
+          tofu_match[4] = tofu_player[std+1]
+          tofu_match[5] = tofu_player[std-3]
+        else:
+          tofu_match[1] = tofu_player[std-2]
+          tofu_match[2] = tofu_player[std-1]
+          tofu_match[3] = tofu_player[std]
+          tofu_match[4] = tofu_player[std-4]
+          tofu_match[5] = tofu_player[std-3]
+
+
+        quiz = random.randint(1,5)
+        
+        while True:  
+          if quiz == 3:
+            quiz = random.randint(1,5)
+          else:
+            break
+
+          
+        while True: #사용자 차례에서는 input으로 답 받기
+          if self.turn_player == len(self.player)-1:
+            answer = input(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?: ")
+            self.turn_player = 0
+            break
+          else:                            #컴퓨터 차례에는 랜덤으로 답 받기
+            print(f"\n❗QUIZ! - {self.player[self.turn_player].name} : {quiz}모는 누구일까요?")
+            t_f = random.randint(0,1)
+            if t_f == 0:
+                answer = tofu_match[quiz]
+            else:
+              w_answer = random.randint(1,5)
+              while True:
+                if w_answer == quiz:
+                  w_answer = random.randint(1,5)
+                else:
+                  break
+              w_answer = answer   
+            print(f"{answer}입니다.")
+            break
+            
+        if tofu_match[quiz] == answer:
+          print("\n정답!")
+          print("두부게임 계속 진행합니다")
+          self.turn_player += 1
+        else:
+          print("\n틀렸습니다!")
+          print(f'\n아 누가누가 술을 마셔😲 {self.player[self.turn_player].name}(가) 술을 마셔🤪 원~~~샷❗🧨 원샷!')
+          self.player[self.turn_player].drink_amount += 1
+          print("-"*7,"게임을 종료합니다.","-"*7)
+          self.decideTurn()
+          break
+
     def game_5(self):
       '''술게임 5 (크롤링)'''
       # TODO 7
@@ -262,14 +544,6 @@ class Game:
         self.player[turn].drink_amount += 1
         self.decideTurn()
       
-        
-      
-
-      
-        
-      
-      
-
 
 game = Game()
 game.game()
